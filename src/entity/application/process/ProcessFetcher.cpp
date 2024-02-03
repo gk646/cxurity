@@ -4,7 +4,8 @@
 ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   cxstructs::vec<Process, false> localList;
 #ifdef CXU_HOST_SYSTEM_WIN
-  if (limit == 0) limit = UINT16_MAX;
+  if (limit == 0)
+    limit = UINT16_MAX;
 
   HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (hProcessSnap == INVALID_HANDLE_VALUE) {
@@ -20,7 +21,8 @@ ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   if (Process32First(hProcessSnap, &pe32)) {
     do {
       localList.emplace_back(pe32);
-      if (localList.size() >= limit) break;
+      if (localList.size() >= limit)
+        break;
     } while (Process32Next(hProcessSnap, &pe32));
   } else {
     std::cerr << "Process32First failed." << std::endl;
@@ -34,5 +36,5 @@ ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   auto ptr = localList.get_raw();
   localList.get_raw() = nullptr;
 
-  return {ptr, (uint16_t) localList.size()};
+  return {ptr, (uint16_t)localList.size()};
 }

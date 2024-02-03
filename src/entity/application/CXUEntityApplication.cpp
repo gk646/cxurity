@@ -1,20 +1,19 @@
 #include "../../cxurity.h"
 
 CXUEntityApplication::CXUEntityApplication() : entity({}) {
+  for (int i = 0; i < CXU_WORKER_THREADS; i++) {
+    cxu::worker::IMPL_initWorker();
+  }
 }
 
-CXUEntityApplication::~CXUEntityApplication() {
-  if (logThread.joinable()) logThread.join();
-  if (inputThread.joinable()) inputThread.join();
-}
+CXUEntityApplication::~CXUEntityApplication() {}
 
 int CXUEntityApplication::run() {
 
-  logThread = std::thread(&CXUEntityApplication::loggingThread, this);
-  inputThread = std::thread(&CXUEntityApplication::userInputThread, this);
-
-  logThread.detach();
-  inputThread.join();
+  while (true) {
+    entity.update(entity);
+    std::this_thread::sleep_for(std::chrono::milliseconds(entity.eInfo.rIntervalMil));
+  }
 
   return CXU_SUCCESS;
 }

@@ -2,108 +2,84 @@
 #define CXURITY_SRC_CXURITY_H_
 
 #include "cxuconfig.h"
+#include "util/Worker.h"
+
+struct Entity;
 
 using ProcessID = uint32_t;
 
-enum CXU_Level : uint8_t { CXU_FULL,
-                           CXU_MAIN_ONLY,
-                           CXU_UNSET };
-
-enum CXU_ProcessType : uint8_t { CXU_SYSTEM,
-                                 CXU_USER_LAUNCHED,
-                                 CXU_UNDEFINED,
-                                 CXU_MALICIOUS };
-
-enum CXU_Result : uint8_t { CXU_SUCCESS,
-                            CXU_ERROR };
+enum class CXU_SecurityLevel : uint8_t { FULL, MAIN_ONLY };
+enum class CXU_ProcessType : uint8_t { SYSTEM, USER_LAUNCHED, UNSET, MALICIOUS, UNKNOWN };
+enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
+enum CXU_Result : uint8_t { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
-  char name[31];        //Process name | 30 characters + null terminator
-  uint32_t id;          //Process id
-  uint32_t pId;         //Process id of the parent
-  uint16_t cntThreads;  //Number of execution threads started by process
-  uint16_t basePriority;//Base priority of process's threads
-  CXU_ProcessType infType = CXU_UNDEFINED;
+  char name[31];          //Process name | 30 characters + null terminator
+  uint32_t id;            //Process id
+  uint32_t pId;           //Process id of the parent
+  uint16_t cntThreads;    //Number of execution threads started by process
+  uint16_t basePriority;  //Base priority of process's threads
+  CXU_ProcessType infType = CXU_ProcessType::UNSET;
 
   Process(){};
 #ifdef CXU_HOST_SYSTEM_WIN
-  explicit Process(const PROCESSENTRY32 &pe32);
+  explicit Process(const PROCESSENTRY32& pe32);
 #endif
-  friend std::ostream &operator<<(std::ostream &out, const Process &p);
+  friend std::ostream& operator<<(std::ostream& out, const Process& p);
 };
 
 struct ProcessList {
   uint16_t len;
-  Process *ptr;
+  Process* ptr = nullptr;
   int64_t timestamp = std::time(nullptr);
-  ProcessList(Process *ptr, uint16_t len);
+  ProcessList(Process* ptr, uint16_t len);
+  ProcessList& operator=(const ProcessList&);
+  ProcessList& operator=(ProcessList&&) noexcept;
   ~ProcessList();
-  Process &operator[](uint32_t idx) const;
-  friend std::ostream &operator<<(std::ostream &out, const ProcessList &l);
+  Process& operator[](uint32_t idx) const;
+  friend std::ostream& operator<<(std::ostream& out, const ProcessList& l);
 };
 
 struct ProcessFetcher {
-  static ProcessList getProcessList(uint16_t limit = 0);//Retrieves a snapshot of the current processes -limit=limits the number of entries
+  //Retrieves a snapshot of the current processes -limit=limits the number of entries
+  static ProcessList getProcessList(uint16_t limit = 0);
 };
 
 struct ProcessPool {
-  std::unordered_map<Process *, ProcessID> upsMap;
+  std::unordered_map<Process*, ProcessID> upsMap;
   ProcessList list;
-  const CXU_Level &eLevel;//entity security level
+  const CXU_SecurityLevel& sLevel;  //entity security level
 
-  explicit ProcessPool(const CXU_Level &eLevel);
+  explicit ProcessPool(const CXU_SecurityLevel& eLevel);
+  void update(Entity&);
 
  private:
   void IMPL_update();
 };
 
 struct EntityInformation {
-  char name[31];
-  CXU_Level level = CXU_MAIN_ONLY;
-
-  //Role
+  char name[31] = {0};                                      //Name of the entity
+  uint16_t rIntervalMil = 2000;                             //Refresh interval in millis
+  CXU_SecurityLevel sLevel = CXU_SecurityLevel::MAIN_ONLY;  //Security level for this entity
+  CXU_EntityRole eRole = CXU_EntityRole::UNSET;             //Role of this entity
 };
 
 struct Entity {
-  ProcessPool pPool;      //Process Pool
-  EntityInformation eInfo;//entity Information
+  ProcessPool pPool;        //Process Pool
+  EntityInformation eInfo;  //entity Information
   Entity();
+  void update(Entity&);
+
+ private:
 };
 
 struct CXUEntityApplication {
   Entity entity;
-  std::thread logThread;
-  std::thread inputThread;
-  std::atomic<bool> running{true};
-  std::mutex cout_mutex{};
 
   CXUEntityApplication();
   ~CXUEntityApplication();
   int run();
 
  private:
-  void loggingThread() {
-    while (running.load()) {
-      {
-        std::lock_guard<std::mutex> lock(cout_mutex);
-        std::cout << "Logging information..." << std::endl;
-      }
-      std::this_thread::sleep_for(std::chrono::seconds(1));// Log every second
-    }
-  }
-
-  void userInputThread() {
-    std::string input;
-    while (running.load()) {
-      std::getline(std::cin, input);
-      if (input == "exit") {
-        running.store(false);
-      }
-      {
-        std::lock_guard<std::mutex> lock(cout_mutex);
-        std::cout << "You entered: " << input << std::endl;
-      }
-    }
-  }
 };
-#endif//CXURITY_SRC_CXURITY_H_
+#endif  //CXURITY_SRC_CXURITY_H_

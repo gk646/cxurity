@@ -1,7 +1,7 @@
 #include "../../cxurity.h"
 
+Entity::Entity() : eInfo({}), pPool(eInfo.sLevel) {}
 
-
-Entity::Entity() : eInfo({}), pPool(eInfo.level) {
-
+void Entity::update(Entity& e) {
+  pPool.update(e);
 }
