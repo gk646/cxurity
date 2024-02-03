@@ -19,6 +19,9 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
+#include <thread>
+#include <atomic>
 
 inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";  //Static array to capture reserved pids
 

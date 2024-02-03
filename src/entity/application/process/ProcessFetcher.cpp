@@ -36,5 +36,6 @@ ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   auto ptr = localList.get_raw();
   localList.get_raw() = nullptr;
 
+  std::cout << "Processes fetched" << std::endl;
   return {ptr, (uint16_t)localList.size()};
 }

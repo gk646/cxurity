@@ -1,12 +1,12 @@
 #include "../../cxurity.h"
 
-CXUEntityApplication::CXUEntityApplication() : entity({}) {
-  for (int i = 0; i < CXU_WORKER_THREADS; i++) {
-    cxu::worker::IMPL_initWorker();
-  }
+CXUEntityApplication::CXUEntityApplication() : entity() {
+  cxu::worker::IMPL_initWorkers(4);
 }
 
-CXUEntityApplication::~CXUEntityApplication() {}
+CXUEntityApplication::~CXUEntityApplication() {
+  cxu::worker::IMPL_stopAllWorkers();
+}
 
 int CXUEntityApplication::run() {
 

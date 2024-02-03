@@ -14,6 +14,7 @@ enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
 enum CXU_Result : uint8_t { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
+  volatile long long ints[1000];
   char name[31];          //Process name | 30 characters + null terminator
   uint32_t id;            //Process id
   uint32_t pId;           //Process id of the parent
@@ -37,6 +38,8 @@ struct ProcessList {
   ProcessList& operator=(ProcessList&&) noexcept;
   ~ProcessList();
   Process& operator[](uint32_t idx) const;
+  bool contains(uint32_t pid) const;
+  bool hasParent(uint32_t pid) const;
   friend std::ostream& operator<<(std::ostream& out, const ProcessList& l);
 };
 
@@ -48,18 +51,18 @@ struct ProcessFetcher {
 struct ProcessPool {
   std::unordered_map<Process*, ProcessID> upsMap;
   ProcessList list;
-  const CXU_SecurityLevel& sLevel;  //entity security level
 
   explicit ProcessPool(const CXU_SecurityLevel& eLevel);
   void update(Entity&);
 
  private:
   void IMPL_update();
+  void filterList(CXU_SecurityLevel);
 };
 
 struct EntityInformation {
   char name[31] = {0};                                      //Name of the entity
-  uint16_t rIntervalMil = 2000;                             //Refresh interval in millis
+  uint16_t rIntervalMil = 4000;                             //Refresh interval in millis
   CXU_SecurityLevel sLevel = CXU_SecurityLevel::MAIN_ONLY;  //Security level for this entity
   CXU_EntityRole eRole = CXU_EntityRole::UNSET;             //Role of this entity
 };

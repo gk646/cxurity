@@ -28,10 +28,21 @@ ProcessList::~ProcessList() {
   delete ptr;
 }
 Process& ProcessList::operator[](uint32_t idx) const {
-  if (idx >= len)
-    std::cout << "OUT OF BOUNDS" << std::endl;
+  if (!ptr) std::cout << "YOYO" << std::endl;
+  if (idx >= len) std::cout << "OUT OF BOUNDS" << std::endl;
   return ptr[idx];
 }
+
+bool ProcessList::hasParent(uint32_t prntID) const {
+  if (prntID == 0 || prntID == 4) return false;
+  for (int i = 0; i < len; i++) {
+    if (ptr[i].id == prntID) {
+      return true;
+    }
+  }
+  return false;
+}
+
 std::ostream& operator<<(std::ostream& out, const ProcessList& l) {
   std::time_t t = l.timestamp;
   std::tm* tm = std::localtime(&t);
