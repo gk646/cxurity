@@ -1,16 +1,9 @@
 #include "../../../cxurity.h"
 
-ProcessPool::ProcessPool(const CXU_SecurityLevel& sLevel)
-    : list(ProcessFetcher::getProcessList()) {}
+ProcessPool::ProcessPool(const CXU_SecurityLevel& sLevel) : list(nullptr, 0) {}
 
 void ProcessPool::update(Entity& e) {
-
-  cxu::worker::enqueueTask([&]() {
-    list = ProcessFetcher::getProcessList();
-    std::cout << list << std::endl;
-    filterList(e.eInfo.sLevel);
-    std::cout << list << std::endl;
-  });
+  cxu::worker::enqueueTask([&]() { IMPL_update(e); });
 }
 
 void ProcessPool::filterList(CXU_SecurityLevel sLevel) {
@@ -28,6 +21,14 @@ void ProcessPool::filterList(CXU_SecurityLevel sLevel) {
   }
 }
 
-void ProcessPool::IMPL_update() {
+void ProcessPool::createMappings() {
+  for (int i = 0; i < list.len; i++) {
+    idMap.insert({list[i].id, &list[i]});
+  }
+}
+
+void ProcessPool::IMPL_update(Entity& e) {
   list = ProcessFetcher::getProcessList();
+  filterList(e.eInfo.sLevel);
+  createMappings();
 }

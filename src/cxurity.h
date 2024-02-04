@@ -14,8 +14,7 @@ enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
 enum CXU_Result : uint8_t { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
-  volatile long long ints[1000];
-  char name[31];          //Process name | 30 characters + null terminator
+  char name[31] = {0};    //Process name | 30 characters + null terminator
   uint32_t id;            //Process id
   uint32_t pId;           //Process id of the parent
   uint16_t cntThreads;    //Number of execution threads started by process
@@ -30,17 +29,22 @@ struct Process {
 };
 
 struct ProcessList {
-  uint16_t len;
-  Process* ptr = nullptr;
-  int64_t timestamp = std::time(nullptr);
+  uint16_t len = 0;        //Data length
+  Process* ptr = nullptr;  //Data pointer
+  int64_t timestamp;       //Timestamp in unix millis
+
   ProcessList(Process* ptr, uint16_t len);
-  ProcessList& operator=(const ProcessList&);
+  ProcessList(const ProcessList&) = delete;
+  ProcessList(ProcessList&&) noexcept;
+  ProcessList& operator=(const ProcessList&) = delete;
   ProcessList& operator=(ProcessList&&) noexcept;
   ~ProcessList();
   Process& operator[](uint32_t idx) const;
-  bool contains(uint32_t pid) const;
-  bool hasParent(uint32_t pid) const;
+  [[nodiscard]] bool hasParent(uint32_t pid) const;
   friend std::ostream& operator<<(std::ostream& out, const ProcessList& l);
+
+ private:
+  //add small dynamic resize here
 };
 
 struct ProcessFetcher {
@@ -49,22 +53,36 @@ struct ProcessFetcher {
 };
 
 struct ProcessPool {
-  std::unordered_map<Process*, ProcessID> upsMap;
+  std::unordered_map<ProcessID, Process*> idMap;
   ProcessList list;
 
   explicit ProcessPool(const CXU_SecurityLevel& eLevel);
   void update(Entity&);
 
  private:
-  void IMPL_update();
+  void IMPL_update(Entity&);
   void filterList(CXU_SecurityLevel);
+  void createMappings();
+};
+
+struct DeviceInformation {
+  char osVersion[64] = {0};              // Operating System Version
+  char processorArchitecture[32] = {0};  // Processor Architecture
+  char name[31] = {0};                   //Name of the entity
+  uint64_t totalPhysicalMemory = 0;      // Total Physical Memory in bytes
+  uint64_t availablePhysicalMemory = 0;  // Available Physical Memory in bytes
+  uint64_t sysUptimeSec = 0;             // System uptime in seconds
+  uint64_t lstBootSec = 0;               // Time since last boot in UNIX seconds
+  uint32_t numberOfProcessors = 0;       // Number of Logical Processors
+  DeviceInformation();
 };
 
 struct EntityInformation {
-  char name[31] = {0};                                      //Name of the entity
-  uint16_t rIntervalMil = 4000;                             //Refresh interval in millis
+  DeviceInformation devInfo{};                              //Device information
+  uint16_t rIntervalMil = 40;                               //Refresh interval in millis
   CXU_SecurityLevel sLevel = CXU_SecurityLevel::MAIN_ONLY;  //Security level for this entity
   CXU_EntityRole eRole = CXU_EntityRole::UNSET;             //Role of this entity
+  EntityInformation();
 };
 
 struct Entity {

@@ -1,6 +1,7 @@
 #include "../../../cxurity.h"
 
 #ifdef CXU_HOST_SYSTEM_WIN
+
 Process::Process(const PROCESSENTRY32& pe32)
     : id(pe32.th32ProcessID),
       pId(pe32.th32ParentProcessID),

@@ -1,14 +1,12 @@
 #include "../../../cxurity.h"
 
-ProcessList::ProcessList(Process* ptr, uint16_t len) : ptr(ptr), len(len) {}
-ProcessList& ProcessList::operator=(const ProcessList& o) {
-  if (&o != this) {
-    delete ptr;
-    ptr = o.ptr;
-    len = o.len;
-    timestamp = o.timestamp;
-    return *this;
-  }
+ProcessList::ProcessList(Process* ptr, uint16_t len)
+    : ptr(ptr), len(len), timestamp(std::time(nullptr)) {}
+ProcessList::ProcessList(ProcessList&& o) noexcept
+    : ptr(o.ptr), len(o.len), timestamp(o.timestamp) {
+  o.ptr = nullptr;
+  o.timestamp = 0;
+  o.len = 0;
 }
 ProcessList& ProcessList::operator=(ProcessList&& o) noexcept {
   if (&o != this) {
@@ -32,7 +30,6 @@ Process& ProcessList::operator[](uint32_t idx) const {
   if (idx >= len) std::cout << "OUT OF BOUNDS" << std::endl;
   return ptr[idx];
 }
-
 bool ProcessList::hasParent(uint32_t prntID) const {
   if (prntID == 0 || prntID == 4) return false;
   for (int i = 0; i < len; i++) {
@@ -42,7 +39,6 @@ bool ProcessList::hasParent(uint32_t prntID) const {
   }
   return false;
 }
-
 std::ostream& operator<<(std::ostream& out, const ProcessList& l) {
   std::time_t t = l.timestamp;
   std::tm* tm = std::localtime(&t);

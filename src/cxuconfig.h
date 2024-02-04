@@ -37,6 +37,7 @@ inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";  //Static array to captu
 #define CXU_HOST_SYSTEM 0
 inline constexpr int CXU_OS_RESERVED_PIDS[2] = {0, 4};  //Static array to capture reserved pids
 #include <windows.h>
+#include <VersionHelpers.h>
 #include <tlhelp32.h>
 #elif CXU_HOST_SYSTEM_UNIX
 #define CXU_HOST_SYSTEM 1
