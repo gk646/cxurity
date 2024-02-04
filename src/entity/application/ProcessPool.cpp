@@ -3,7 +3,14 @@
 ProcessPool::ProcessPool() {}
 
 void ProcessPool::update(Entity& e) {
-  cxu::worker::enqueueTask([&]() { IMPL_update(e); });
+  if (isRefresh(e.eInfo.rIntervalMil)) {
+    cxu::worker::enqueueTask([&]() {
+      list = ProcessFetcher::getProcessList();
+      filterList(e.eInfo.sLevel);
+      createMappings();
+    });
+  }
+  upCounter++;
 }
 
 void ProcessPool::filterList(CXU_SecurityLevel sLevel) {
@@ -27,8 +34,10 @@ void ProcessPool::createMappings() {
   }
 }
 
-void ProcessPool::IMPL_update(Entity& e) {
-  list = ProcessFetcher::getProcessList();
-  filterList(e.eInfo.sLevel);
-  createMappings();
+bool ProcessPool::isRefresh(uint16_t rIntervalMil) {
+  if ((1000.0F / CXU_APPLICATION_FPS) * upCounter >= rIntervalMil) {
+    upCounter = 0;
+    return true;
+  }
+  return false;
 }

@@ -11,12 +11,25 @@ include(FetchContent)
 FetchContent_Declare(cxstructs GIT_REPOSITORY https://github.com/gk646/CXStructures.git)
 FetchContent_MakeAvailable(cxstructs)
 
-FetchContent_Declare(
-        raylib
-        GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG 5.0
+FetchContent_Declare(raylib GIT_REPOSITORY https://github.com/raysan5/raylib.git GIT_TAG 5.0
 )
 FetchContent_MakeAvailable(raylib)
+
+set(RAYGUI_URL "https://raw.githubusercontent.com/raysan5/raygui/master/src/raygui.h")
+set(RAYGUI_VERSION "4.0")
+set(RAYGUI_HEADER "${CMAKE_BINARY_DIR}/raygui.h")
+
+if (NOT EXISTS "${RAYGUI_HEADER}")
+    message(STATUS "Downloading raygui.h from ${RAYGUI_URL}")
+    file(DOWNLOAD ${RAYGUI_URL} ${RAYGUI_HEADER}
+            TIMEOUT 60
+            TLS_VERIFY ON
+            SHOW_PROGRESS)
+endif ()
+
+
+include_directories(${CMAKE_BINARY_DIR})
+
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")

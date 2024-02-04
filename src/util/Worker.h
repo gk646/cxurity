@@ -13,6 +13,7 @@ inline std::queue<std::function<void()>> TASKS{};
 inline std::mutex queue_mutex{};
 inline std::condition_variable condition{};
 inline bool stopWorkers = false;
+inline std::vector<std::thread> workers;
 
 inline void enqueueTask(std::function<void()> task) noexcept {
   {
@@ -38,7 +39,7 @@ inline void IMPL_worker() noexcept {
 
 inline void IMPL_initWorkers(uint8_t numWorkers) noexcept {
   for (uint8_t i = 0; i < numWorkers; ++i) {
-    std::thread(IMPL_worker).detach();
+    workers.emplace_back(IMPL_worker);
   }
   std::cout << "Registered " << numWorkers << " Workers" << std::endl;
 }
@@ -49,6 +50,12 @@ inline void IMPL_stopAllWorkers() noexcept {
     stopWorkers = true;
   }
   condition.notify_all();
+  for (auto& t : workers) {
+    if (t.joinable()) {
+      t.join();
+    }
+  }
+  std::cout << "Successfully closed " << workers.size() << " Workers" << std::endl;
 }
 }  // namespace cxu::worker
 #endif  //CXURITY_SRC_UTIL_WORKER_H_

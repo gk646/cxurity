@@ -3,6 +3,7 @@
 
 #include "cxuconfig.h"
 #include "util/Worker.h"
+#include <raylib.h>
 
 struct Entity;
 
@@ -74,14 +75,19 @@ struct ProcessPool {
   void update(Entity&);
 
  private:
-  void IMPL_update(Entity&);
-  void filterList(CXU_SecurityLevel);
+  uint16_t upCounter = 0;
+
   void createMappings();
+  void filterList(CXU_SecurityLevel);
+  bool isRefresh(uint16_t);
 };
 
-struct Snapshot {};
+struct Snapshot {
+  //TODO
+};
 
 struct History {
+  //TODO
   std::vector<Snapshot> history;
 };
 
@@ -99,7 +105,7 @@ struct DeviceInformation {
 
 struct EntityInformation {
   DeviceInformation devInfo{};                              //Device information
-  uint16_t rIntervalMil = 40;                               //Refresh interval in millis
+  uint16_t rIntervalMil = 5000;                             //Refresh interval in millis
   CXU_SecurityLevel sLevel = CXU_SecurityLevel::MAIN_ONLY;  //Security level for this entity
   CXU_EntityRole eRole = CXU_EntityRole::UNSET;             //Role of this entity
   EntityInformation();
@@ -111,17 +117,68 @@ struct Entity {
   History history;          //Historic data
   Entity();
   void update(Entity&);
+};
 
- private:
+/* |-----------------------------------------------------|
+ * |                         UI                          |
+ * |-----------------------------------------------------|
+ */
+
+struct UIComponent {
+  virtual void draw() = 0;
+  virtual ~UIComponent() = default;
+};
+
+struct StatusBar : public UIComponent {
+  void draw() final;
+};
+
+struct ProcessListView : public UIComponent {
+  void draw() final;
+};
+
+struct AnomalyPanel : public UIComponent {
+  void draw() final;
+};
+
+struct Dashboard : public UIComponent {
+  StatusBar statusBar;
+  ProcessListView processListView;
+  AnomalyPanel anomalyPanel;
+
+  void draw() final {
+    statusBar.draw();
+    processListView.draw();
+    anomalyPanel.draw();
+  }
+};
+
+struct EntityUIRoot {
+  const int MARGIN_SIZE = 5;  // Margin size for resize area
+  int minWidth = 200;
+  int minHeight = 200;
+  bool isResizingRight = false;
+  bool isResizingBottom = false;
+  bool isResizingLeft = false;
+  bool isMoving = false;
+  Vector2 mousePosition;
+  Vector2 windowSize;
+  Vector2 windowPosition;
+  Vector2 clickOffset;
+  Dashboard dBoard;
+  void update();
+  void draw();
 };
 
 struct CXUEntityApplication {
   Entity entity;
-
+  EntityUIRoot uiRoot;
   CXUEntityApplication();
   ~CXUEntityApplication();
   int run();
 
  private:
+  void draw();
 };
+
 #endif  //CXURITY_SRC_CXURITY_H_

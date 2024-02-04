@@ -24,9 +24,9 @@
 #include <new>
 #include <utility>
 
-inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";  //Static array to capture reserved pids
-
+inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";
 #define CXU_WORKER_THREADS 4
+#define CXU_APPLICATION_FPS 60
 
 //OS specific
 #define CXU_HOST_SYSTEM_WIN
@@ -76,7 +76,7 @@ inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";  //Static array to captu
 #define NODEFERWINDOWPOS  // DeferWindowPos routines
 #define NOMCX             // Modem Configuration Extensions
 #define CXU_HOST_SYSTEM 0
-inline constexpr int CXU_OS_RESERVED_PIDS[2] = {0, 4};  //Static array to capture reserved pids
+inline int CXU_OS_RESERVED_PIDS[2] = {0, 4};  //Static array to capture reserved pids
 #include <windows.h>
 #include <VersionHelpers.h>
 #include <tlhelp32.h>

@@ -3,7 +3,12 @@
 
 CXUEntityApplication::CXUEntityApplication() : entity() {
   cxu::worker::IMPL_initWorkers(CXU_WORKER_THREADS);
-  InitWindow(1280, 960, "cxurity");
+  SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
+  SetWindowState(FLAG_MSAA_4X_HINT);
+  InitWindow(1280, 960, CXU_PROCESS_NAME);
+  SetWindowState(FLAG_WINDOW_RESIZABLE);
+  SetWindowState(FLAG_WINDOW_UNDECORATED);
+  SetTargetFPS(CXU_APPLICATION_FPS);
 }
 
 CXUEntityApplication::~CXUEntityApplication() {
@@ -11,10 +16,13 @@ CXUEntityApplication::~CXUEntityApplication() {
 }
 
 int CXUEntityApplication::run() {
-  while (true) {
+  while (!WindowShouldClose()) {
     entity.update(entity);
-    std::this_thread::sleep_for(std::chrono::milliseconds(entity.eInfo.rIntervalMil));
+    uiRoot.update();
+    uiRoot.draw();
   }
-
+  CloseWindow();
   return CXU_SUCCESS;
 }
+
+void CXUEntityApplication::draw() {}
