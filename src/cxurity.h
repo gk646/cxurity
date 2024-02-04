@@ -14,7 +14,7 @@ enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
 enum CXU_Result : uint8_t { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
-  char name[31] = {0};    //Process name | 30 characters + null terminator
+  char name[31];          //Process name | 30 characters + null terminator
   uint32_t id;            //Process id
   uint32_t pId;           //Process id of the parent
   uint16_t cntThreads;    //Number of execution threads started by process
@@ -23,28 +23,42 @@ struct Process {
 
   Process(){};
 #ifdef CXU_HOST_SYSTEM_WIN
-  explicit Process(const PROCESSENTRY32& pe32);
+  explicit Process(PROCESSENTRY32& pe32);
 #endif
   friend std::ostream& operator<<(std::ostream& out, const Process& p);
 };
 
+//"Dumb" data holder with minimal dynamic array components
 struct ProcessList {
   uint16_t len = 0;        //Data length
   Process* ptr = nullptr;  //Data pointer
-  int64_t timestamp;       //Timestamp in unix millis
+  int64_t timestamp = 0;   //Timestamp in unix millis
 
-  ProcessList(Process* ptr, uint16_t len);
-  ProcessList(const ProcessList&) = delete;
+  ProcessList();
+  ProcessList(const ProcessList&);
   ProcessList(ProcessList&&) noexcept;
   ProcessList& operator=(const ProcessList&) = delete;
   ProcessList& operator=(ProcessList&&) noexcept;
   ~ProcessList();
   Process& operator[](uint32_t idx) const;
   [[nodiscard]] bool hasParent(uint32_t pid) const;
+
+ public:
+  template <typename... Args>
+  void emplace_back(Args&&... args) {
+    if (len >= capacity) {
+      grow();
+    }
+    new (&ptr[len]) Process(std::forward<Args>(args)...);
+    len++;
+  }
+  void reserve(uint16_t);
+
   friend std::ostream& operator<<(std::ostream& out, const ProcessList& l);
 
  private:
-  //add small dynamic resize here
+  uint16_t capacity = 0;
+  void grow();
 };
 
 struct ProcessFetcher {
@@ -56,13 +70,19 @@ struct ProcessPool {
   std::unordered_map<ProcessID, Process*> idMap;
   ProcessList list;
 
-  explicit ProcessPool(const CXU_SecurityLevel& eLevel);
+  explicit ProcessPool();
   void update(Entity&);
 
  private:
   void IMPL_update(Entity&);
   void filterList(CXU_SecurityLevel);
   void createMappings();
+};
+
+struct Snapshot {};
+
+struct History {
+  std::vector<Snapshot> history;
 };
 
 struct DeviceInformation {
@@ -86,8 +106,9 @@ struct EntityInformation {
 };
 
 struct Entity {
-  ProcessPool pPool;        //Process Pool
   EntityInformation eInfo;  //entity Information
+  ProcessPool pPool;        //Process Pool
+  History history;          //Historic data
   Entity();
   void update(Entity&);
 

@@ -1,3 +1,4 @@
 cmake*
 .clang-format
 .idea
+priv

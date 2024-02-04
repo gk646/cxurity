@@ -29,8 +29,8 @@ inline void IMPL_worker() noexcept {
   }
 }
 
-inline void IMPL_initWorkers(size_t numWorkers) noexcept {
-  for (size_t i = 0; i < numWorkers; ++i) {
+inline void IMPL_initWorkers(uint8_t numWorkers) noexcept {
+  for (uint8_t i = 0; i < numWorkers; ++i) {
     std::thread(IMPL_worker).detach();
   }
   std::cout << "Registered " << numWorkers << " Workers" << std::endl;

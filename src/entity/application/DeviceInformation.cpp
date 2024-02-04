@@ -1,4 +1,4 @@
-#include "../../../cxurity.h"
+#include "../../cxurity.h"
 
 DeviceInformation::DeviceInformation() {
 #ifdef CXU_HOST_SYSTEM_WIN

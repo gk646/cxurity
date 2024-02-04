@@ -5,6 +5,6 @@ using namespace std;
 using namespace cxstructs;
 
 int main() {
-  auto cxu = CXUEntityApplication();
-  return cxu.run();
+  auto cxu = new CXUEntityApplication();
+  return cxu->run();
 }

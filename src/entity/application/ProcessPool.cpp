@@ -1,6 +1,6 @@
-#include "../../../cxurity.h"
+#include "../../cxurity.h"
 
-ProcessPool::ProcessPool(const CXU_SecurityLevel& sLevel) : list(nullptr, 0) {}
+ProcessPool::ProcessPool() {}
 
 void ProcessPool::update(Entity& e) {
   cxu::worker::enqueueTask([&]() { IMPL_update(e); });

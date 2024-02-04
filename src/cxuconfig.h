@@ -21,7 +21,8 @@
 #include <vector>
 #include <iostream>
 #include <thread>
-#include <atomic>
+#include <new>
+#include <utility>
 
 inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";  //Static array to capture reserved pids
 

@@ -1,28 +1,24 @@
-#include "../../../cxurity.h"
+#include "../../cxurity.h"
 #include "CXStructs.h"
 
 ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
-  cxstructs::vec<Process, false> localList;
+  cxstructs::now();
+  ProcessList pList{};
+  pList.reserve(limit == 0 ? 150 : limit > 500 ? 500 : limit);
 #ifdef CXU_HOST_SYSTEM_WIN
-  if (limit == 0)
-    limit = UINT16_MAX;
-
   HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (hProcessSnap == INVALID_HANDLE_VALUE) {
     std::cerr << "CreateToolhelp32Snapshot failed." << std::endl;
-    return ProcessList{nullptr, 0};
+    return ProcessList{};
   }
 
   PROCESSENTRY32 pe32;
   pe32.dwSize = sizeof(PROCESSENTRY32);
 
-  localList.reserve(limit > 1000 ? 1000 : limit);
-
   if (Process32First(hProcessSnap, &pe32)) {
     do {
-      localList.emplace_back(pe32);
-      if (localList.size() >= limit)
-        break;
+      pList.emplace_back(pe32);
+      if (pList.len >= limit) break;
     } while (Process32Next(hProcessSnap, &pe32));
   } else {
     std::cerr << "Process32First failed." << std::endl;
@@ -32,10 +28,6 @@ ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
 #elif CXU_HOST_SYSTEM_UNIX
 
 #endif
-
-  auto ptr = localList.get_raw();
-  localList.get_raw() = nullptr;
-
-  std::cout << "Processes fetched" << std::endl;
-  return {ptr, (uint16_t)localList.size()};
+  cxstructs::printTime<std::chrono::milliseconds>("Processes fetched in: ");
+  return pList;
 }
