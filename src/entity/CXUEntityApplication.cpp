@@ -1,7 +1,9 @@
 #include "../cxurity.h"
+#include <raylib.h>
 
 CXUEntityApplication::CXUEntityApplication() : entity() {
   cxu::worker::IMPL_initWorkers(CXU_WORKER_THREADS);
+  InitWindow(1280, 960, "cxurity");
 }
 
 CXUEntityApplication::~CXUEntityApplication() {

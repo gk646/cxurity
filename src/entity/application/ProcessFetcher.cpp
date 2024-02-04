@@ -1,5 +1,5 @@
 #include "../../cxurity.h"
-#include "CXStructs.h"
+#include <cxutil/cxtime.h>
 
 ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   cxstructs::now();

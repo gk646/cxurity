@@ -1,6 +1,13 @@
 #ifndef CXURITY_SRC_UTIL_WORKER_H_
 #define CXURITY_SRC_UTIL_WORKER_H_
 
+#include <queue>
+#include <functional>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+#include <iostream>
+
 namespace cxu::worker {
 inline std::queue<std::function<void()>> TASKS{};
 inline std::mutex queue_mutex{};

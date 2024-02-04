@@ -1,4 +1,3 @@
-cmake*
-.clang-format
+cmake-*
 .idea
 priv
