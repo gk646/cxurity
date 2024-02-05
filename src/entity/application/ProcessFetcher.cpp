@@ -4,7 +4,8 @@
 ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   cxstructs::now();
   ProcessList pList{};
-  pList.reserve(limit == 0 ? 150 : limit > 500 ? 500 : limit);
+  limit = limit == 0 ? 150 : limit > 500 ? 500 : limit;
+  pList.reserve(limit);
 #ifdef CXU_HOST_SYSTEM_WIN
   HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (hProcessSnap == INVALID_HANDLE_VALUE) {
@@ -23,7 +24,6 @@ ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   } else {
     std::cerr << "Process32First failed." << std::endl;
   }
-
   CloseHandle(hProcessSnap);
 #elif CXU_HOST_SYSTEM_UNIX
 

@@ -24,9 +24,12 @@
 #include <new>
 #include <utility>
 
-inline const char CXU_PROCESS_NAME[12] = "cxurity.exe";
+
 #define CXU_WORKER_THREADS 4
+
 #define CXU_APPLICATION_FPS 60
+#define CXU_APPLICATION_NAME "cxurity"
+#define CXU_PROCESS_NAME "cxurity.exe"
 
 //OS specific
 #define CXU_HOST_SYSTEM_WIN

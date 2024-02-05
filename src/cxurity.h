@@ -3,6 +3,7 @@
 
 #include "cxuconfig.h"
 #include "util/Worker.h"
+#include "util/rayadditions.h"
 #include <raylib.h>
 
 struct Entity;
@@ -12,6 +13,8 @@ using ProcessID = uint32_t;
 enum class CXU_SecurityLevel : uint8_t { FULL, MAIN_ONLY };
 enum class CXU_ProcessType : uint8_t { SYSTEM, USER_LAUNCHED, UNSET, MALICIOUS, UNKNOWN };
 enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
+inline const char *CXU_ROLE_NAMES [4]{"ADMIN", "USER","UNSET", "SERVER" };
+enum class CXU_TabType : uint8_t { DASHBOARD, STATUS_BAR };
 enum CXU_Result : uint8_t { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
@@ -124,51 +127,101 @@ struct Entity {
  * |-----------------------------------------------------|
  */
 
+#define CXU_DARK_GREY \
+  CLITERAL(Color) {   \
+    33, 37, 40, 255   \
+  }  // Light Gray
+#define CXU_WHITE      \
+  CLITERAL(Color) {    \
+    250, 251, 251, 255 \
+  }  // Gray
+#define CXU_RED      \
+  CLITERAL(Color) {  \
+    250, 75, 65, 255 \
+  }  // Dark Gray
+
 struct UIComponent {
-  virtual void draw() = 0;
+  Vector2 pos;
+  virtual void draw(Entity&, Vector2) = 0;
   virtual ~UIComponent() = default;
+  static float getBigFontSize();
+  static float getMediumFontSize();
+  static float getSmallFontSize();
+  static Color getTextColor(int state);
+  static Color darken(const Color& , int v = 10);
+  static Color lighten(const Color&, int v = 10);
 };
 
-struct StatusBar : public UIComponent {
-  void draw() final;
+struct Tab {
+  const char* name = nullptr;
+  UIComponent* component = nullptr;
+  bool isSelected = false;
+  explicit Tab(UIComponent*, const char* name);
+  Tab(const Tab&) = delete;
+  Tab(Tab&&) noexcept;
+  Tab& operator=(const Tab&) = delete;
+  Tab& operator=(Tab&&) noexcept;
+  ~Tab();
+  bool draw(Entity& e, Vector2 pos, CXU_TabType) const;
+  [[nodiscard]] float getNameWidth(CXU_TabType) const;
+};
+
+struct TabList : public UIComponent {
+  std::vector<Tab> tabs;
+  void draw(Entity& e, Vector2 pos) override = 0;
+
+ protected:
+  void setSelected(Tab*);
+};
+
+struct Dashboard : public TabList {
+  Dashboard();
+  void draw(Entity& e, Vector2 pos) final;
+};
+
+struct StatusBar : public TabList {
+  StatusBar();
+  void draw(Entity& e, Vector2 pos) final;
+};
+struct OverView : public UIComponent{
+  void draw(Entity& e, Vector2 pos) final{};
+};
+struct UserDisplay : public UIComponent {
+  void draw(Entity& e, Vector2 pos) final;
+};
+
+struct UISettings : public UIComponent {
+  void draw(Entity& e, Vector2 pos) final{};
+};
+
+struct SidePanel : public UIComponent {
+  UserDisplay uDisplay;
+  void draw(Entity& e, Vector2 pos) final;
 };
 
 struct ProcessListView : public UIComponent {
-  void draw() final;
+  void draw(Entity& e, Vector2 pos) final;
 };
 
 struct AnomalyPanel : public UIComponent {
-  void draw() final;
-};
-
-struct Dashboard : public UIComponent {
-  StatusBar statusBar;
-  ProcessListView processListView;
-  AnomalyPanel anomalyPanel;
-
-  void draw() final {
-    statusBar.draw();
-    processListView.draw();
-    anomalyPanel.draw();
-  }
+  void draw(Entity& e, Vector2 pos) final;
 };
 
 struct EntityUIRoot {
-  const int MARGIN_SIZE = 5;  // Margin size for resize area
-  int minWidth = 200;
-  int minHeight = 200;
-  bool isResizingRight = false;
-  bool isResizingBottom = false;
-  bool isResizingLeft = false;
-  bool isMoving = false;
-  Vector2 mousePosition;
-  Vector2 windowSize;
-  Vector2 windowPosition;
-  Vector2 clickOffset;
-  Dashboard dBoard;
-  void update();
-  void draw();
+  StatusBar statusBar;
+  SidePanel sPanel;
+  void draw(Entity&);
+
+ private:
+  void styleSelector();
+  int visualStyleActive = 8;
+  int prevVisualStyleActive = -1;
 };
+
+/* |-----------------------------------------------------|
+ * |                   APPLICATIONS                      |
+ * |-----------------------------------------------------|
+ */
 
 struct CXUEntityApplication {
   Entity entity;
@@ -176,9 +229,6 @@ struct CXUEntityApplication {
   CXUEntityApplication();
   ~CXUEntityApplication();
   int run();
-
- private:
-  void draw();
 };
 
 #endif  //CXURITY_SRC_CXURITY_H_

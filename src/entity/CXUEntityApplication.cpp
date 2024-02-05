@@ -5,9 +5,8 @@ CXUEntityApplication::CXUEntityApplication() : entity() {
   cxu::worker::IMPL_initWorkers(CXU_WORKER_THREADS);
   SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
   SetWindowState(FLAG_MSAA_4X_HINT);
-  InitWindow(1280, 960, CXU_PROCESS_NAME);
-  SetWindowState(FLAG_WINDOW_RESIZABLE);
-  SetWindowState(FLAG_WINDOW_UNDECORATED);
+  InitWindow(1196, 820, CXU_APPLICATION_NAME);
+  //SetWindowState(FLAG_WINDOW_RESIZABLE);
   SetTargetFPS(CXU_APPLICATION_FPS);
 }
 
@@ -18,11 +17,8 @@ CXUEntityApplication::~CXUEntityApplication() {
 int CXUEntityApplication::run() {
   while (!WindowShouldClose()) {
     entity.update(entity);
-    uiRoot.update();
-    uiRoot.draw();
+    uiRoot.draw(entity);
   }
   CloseWindow();
   return CXU_SUCCESS;
 }
-
-void CXUEntityApplication::draw() {}

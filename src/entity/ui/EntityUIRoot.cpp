@@ -1,67 +1,72 @@
 #include "../../cxurity.h"
 #include <raylib.h>
+#include "style_jungle.h"    // raygui style: jungle
+#include "style_candy.h"     // raygui style: candy
+#include "style_lavanda.h"   // raygui style: lavanda
+#include "style_cyber.h"     // raygui style: cyber
+#include "style_terminal.h"  // raygui style: terminal
+#include "style_ashes.h"     // raygui style: ashes
+#include "style_bluish.h"    // raygui style: bluish
+#include "style_dark.h"      // raygui style: dark
+#include "style_cherry.h"    // raygui style: cherry
+#include "style_sunny.h"     // raygui style: sunny
+#include "style_enefete.h"   // raygui style: enefete
 
-void EntityUIRoot::draw() {
+void EntityUIRoot::draw(Entity& e) {
   BeginDrawing();
-  ClearBackground(GRAY);
-  dBoard.draw();
-
-  mousePosition = GetMousePosition();
-  windowSize = {(float)GetScreenWidth(), (float)GetScreenHeight()};
-  windowPosition = GetWindowPosition();
-
-  if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-    if (mousePosition.y < MARGIN_SIZE) {
-      // Top area for moving the window
-      isMoving = true;
-      clickOffset = mousePosition;
-    } else if (mousePosition.x >= windowSize.x - MARGIN_SIZE) {
-      // Right side for resizing width
-      isResizingRight = true;
-      clickOffset.x = mousePosition.x - windowSize.x;
-    } else if (mousePosition.y >= windowSize.y - MARGIN_SIZE) {
-      // Bottom side for resizing height
-      isResizingBottom = true;
-      clickOffset.y = mousePosition.y - windowSize.y;
-    } else if (mousePosition.x < MARGIN_SIZE) {
-      // Left side for resizing width
-      isResizingLeft = true;
-      clickOffset.x = mousePosition.x;
-    }
-  }
-
-  if (isResizingRight || isResizingBottom || isResizingLeft) {
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-      int newWidth = isResizingRight ? mousePosition.x - clickOffset.x : windowSize.x;
-      int newHeight = isResizingBottom ? mousePosition.y - clickOffset.y : windowSize.y;
-
-      // Adjust for left side resizing
-      if (isResizingLeft) {
-        newWidth = windowSize.x + (windowPosition.x - mousePosition.x);
-        if (newWidth > minWidth) {  // Ensure the new width is not less than minWidth
-          SetWindowPosition(mousePosition.x, windowPosition.y);
-        }
-      }
-
-      newWidth = newWidth < minWidth ? minWidth : newWidth;
-      newHeight = newHeight < minHeight ? minHeight : newHeight;
-
-      SetWindowSize(newWidth, newHeight);
-    } else {
-      isResizingRight = false;
-      isResizingBottom = false;
-      isResizingLeft = false;
-    }
-  } else if (isMoving) {
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-      SetWindowPosition(windowPosition.x + (mousePosition.x - clickOffset.x),
-                        windowPosition.y + (mousePosition.y - clickOffset.y));
-    } else {
-      isMoving = false;
-    }
-  }
-
+  ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+  styleSelector();
+  statusBar.draw(e, {0, 0});
+  sPanel.draw(e, {(float)GetScreenWidth() * 0.7F, 0});
   EndDrawing();
 }
 
-void EntityUIRoot::update() {}
+void EntityUIRoot::styleSelector() {
+  if (visualStyleActive != prevVisualStyleActive) {
+    GuiLoadStyleDefault();
+
+    switch (visualStyleActive) {
+      case 1:
+        GuiLoadStyleJungle();
+        break;
+      case 2:
+        GuiLoadStyleCandy();
+        break;
+      case 3:
+        GuiLoadStyleLavanda();
+        break;
+      case 4:
+        GuiLoadStyleCyber();
+        break;
+      case 5:
+        GuiLoadStyleTerminal();
+        break;
+      case 6:
+        GuiLoadStyleAshes();
+        break;
+      case 7:
+        GuiLoadStyleBluish();
+        break;
+      case 8:
+        GuiLoadStyleDark();
+        break;
+      case 9:
+        GuiLoadStyleCherry();
+        break;
+      case 10:
+        GuiLoadStyleSunny();
+        break;
+      case 11:
+        GuiLoadStyleEnefete();
+        break;
+      default:
+        break;
+    }
+
+    prevVisualStyleActive = visualStyleActive;
+  }
+
+  GuiComboBox({GetScreenWidth()*0.08F, GetScreenHeight()*0.031F, 100, 20},
+              "default;Jungle;Candy;Lavanda;Cyber;Terminal;Ashes;Bluish;Dark;Cherry;Sunny;Enefete",
+              &visualStyleActive);
+}

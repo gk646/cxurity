@@ -1,21 +1,40 @@
 #include "../../cxurity.h"
 #include <raylib.h>
+#include <raygui.h>
 
-void StatusBar::draw() {
-  DrawRectangle(0, 0, GetScreenWidth(), 20, DARKGRAY);
-  DrawText("Security Application", 10, 5, 10, WHITE);
+float UIComponent::getBigFontSize() {
+  return GetScreenHeight() / 30.0F;
+}
+float UIComponent::getMediumFontSize() {
+  return GetScreenHeight() / 42.0F;
+}
+float UIComponent::getSmallFontSize() {
+  return GetScreenHeight() / 52.0F;
+}
+Color UIComponent::lighten(const Color&c, int v) {
+  return Color{static_cast<unsigned char>(c.r +v),static_cast<unsigned char>(c.g+v),static_cast<unsigned char>(c.b+v), c.a};
+}
+Color UIComponent::darken(const Color&c, int v) {
+  return Color{static_cast<unsigned char>(c.r -v),static_cast<unsigned char>(c.g-v),static_cast<unsigned char>(c.b-v), c.a};
 }
 
-void ProcessListView::draw() {
-  // Draw a list view for processes
-  DrawRectangle(20, 30, GetScreenWidth() / 4, GetScreenHeight() - 50, LIGHTGRAY);
-  DrawText("Process List", 30, 40, 10, BLACK);
-  // Dummy list items
-  DrawText("process1.exe", 30, 60, 10, DARKGRAY);
-  DrawText("process2.exe", 30, 80, 10, DARKGRAY);
+Color UIComponent::getTextColor(int state) {
+  return GetColor(GuiGetStyle(DEFAULT, 3 + state * 3));
 }
 
-void AnomalyPanel::draw() {
+void ProcessListView::draw(Entity& e, Vector2 pos) {
+  DrawRectangle(pos.x, pos.y, GetScreenWidth() / 4, GetScreenHeight() - 50, LIGHTGRAY);
+  GuiGetStyle(DEFAULT, BACKGROUND_COLOR);
+  int len = e.pPool.list.len;
+  auto ptr = e.pPool.list.ptr;
+  auto fSize = getMediumFontSize();
+  for (int i = 0; i < len; i++) {
+    DrawTextCXU(ptr[i].name, pos, fSize, CXU_WHITE);
+    pos.y += fSize + 1;
+  }
+}
+
+void AnomalyPanel::draw(Entity& e, Vector2 pos) {
   int panelWidth = GetScreenWidth() / 3;
   int panelHeight = 150;
   int panelX = GetScreenWidth() - panelWidth - 20;
