@@ -5,7 +5,8 @@
 #include "util/Worker.h"
 #include "util/rayadditions.h"
 #include "util/Util.h"
-#include <raylib.h>
+#include "util/Util.h"
+#include "util/OSHelper.h"
 
 //Global state
 inline Texture CXU_APP_TEXTURES[10];
@@ -16,7 +17,8 @@ enum class CXU_SecurityLevel : uint8_t { FULL, MAIN_ONLY };
 enum class CXU_ProcessType : uint8_t { SYSTEM, USER_LAUNCHED, UNSET, MALICIOUS, UNKNOWN };
 enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
 enum class CXU_TabType : uint8_t { DASHBOARD, STATUS_BAR };
-enum CXU_Texture : uint8_t {APP, APP_ROUND};
+enum CXU_Texture : uint8_t { APP, APP_ROUND };
+enum CXU_Side : uint8_t { CXU_WIDTH, CXU_HEIGHT };
 enum CXU_Result : int { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
@@ -74,6 +76,7 @@ struct ProcessFetcher {
   //Retrieves a snapshot of the current processes -limit=limits the number of entries
   static ProcessList getProcessList(uint16_t limit = 0);
   static void network();
+
  private:
 };
 
@@ -156,6 +159,15 @@ struct UIComponent {
   static Color getTextColor(int state);
   static Color darken(const Color&, int v = 10);
   static Color lighten(const Color&, int v = 10);
+  static float getRelSize(float, CXU_Side);
+};
+
+struct UIPanel : public UIComponent {
+  Vector2 rSize;  //Relative size of the component in percentile
+  void draw(Entity&, Vector2) override = 0;
+
+ protected:
+  void drawPanel();
 };
 
 struct Tab {
@@ -188,9 +200,10 @@ struct Dashboard : public TabList {
 struct StatusBar : public TabList {
   StatusBar();
   void draw(Entity& e, Vector2 pos) final;
+
  private:
-  char textBoxText[64] = "Text box";
-  bool textBoxEditMode = false;
+  char tBox[32] = "Search";
+  bool isEditable = false;
 };
 struct OverView : public UIComponent {
   void draw(Entity& e, Vector2 pos) final{};
@@ -223,8 +236,12 @@ struct EntityUIRoot {
 
  private:
   void styleSelector();
+  void drawOS();
   int visualStyleActive = 8;
   int prevVisualStyleActive = -1;
+
+  bool isMoving = false;
+  Vector2 clickOffset;
 };
 
 /* |-----------------------------------------------------|
@@ -233,8 +250,8 @@ struct EntityUIRoot {
  */
 
 struct CXUEntityApplication {
-  Entity entity;
-  EntityUIRoot uiRoot;
+  Entity entity{};
+  EntityUIRoot uiRoot{};
   CXUEntityApplication();
   ~CXUEntityApplication();
   int run();
@@ -242,6 +259,7 @@ struct CXUEntityApplication {
  private:
   void initOS();
   void initRaylib();
+  void exitOS();
 };
 
 #endif  //CXURITY_SRC_CXURITY_H_

@@ -1,5 +1,4 @@
 #include "../../cxurity.h"
-#include <raygui.h>
 
 Tab::Tab(UIComponent* component, const char* name) : component(component), name(name) {}
 

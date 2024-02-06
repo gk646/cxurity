@@ -1,6 +1,4 @@
 #include "../../cxurity.h"
-#include <raylib.h>
-#include <raygui.h>
 
 float UIComponent::getBigFontSize() {
   return GetScreenHeight() / 30.0F;
@@ -11,20 +9,29 @@ float UIComponent::getMediumFontSize() {
 float UIComponent::getSmallFontSize() {
   return GetScreenHeight() / 52.0F;
 }
-Color UIComponent::lighten(const Color&c, int v) {
-  return Color{static_cast<unsigned char>(c.r +v),static_cast<unsigned char>(c.g+v),static_cast<unsigned char>(c.b+v), c.a};
+Color UIComponent::lighten(const Color& c, int v) {
+  return Color{static_cast<unsigned char>(c.r + v), static_cast<unsigned char>(c.g + v),
+               static_cast<unsigned char>(c.b + v), c.a};
 }
-Color UIComponent::darken(const Color&c, int v) {
-  return Color{static_cast<unsigned char>(c.r -v),static_cast<unsigned char>(c.g-v),static_cast<unsigned char>(c.b-v), c.a};
+Color UIComponent::darken(const Color& c, int v) {
+  return Color{static_cast<unsigned char>(c.r - v), static_cast<unsigned char>(c.g - v),
+               static_cast<unsigned char>(c.b - v), c.a};
 }
-
+float UIComponent::getRelSize(float f, CXU_Side s) {
+  if (s == CXU_WIDTH) {
+    return (float)GetScreenWidth() * f;
+  } else {
+    return (float)GetScreenHeight() * f;
+  }
+}
 Color UIComponent::getTextColor(int state) {
   return GetColor(GuiGetStyle(DEFAULT, 2 + state * 3));
 }
 
+
+
 void ProcessListView::draw(Entity& e, Vector2 pos) {
   DrawRectangle(pos.x, pos.y, GetScreenWidth() / 4, GetScreenHeight() - 50, LIGHTGRAY);
-  GuiGetStyle(DEFAULT, BACKGROUND_COLOR);
   int len = e.pPool.list.len;
   auto ptr = e.pPool.list.ptr;
   auto fSize = getMediumFontSize();

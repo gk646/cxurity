@@ -4,7 +4,6 @@ project(cxurity CXX)
 set(CMAKE_CXX_STANDARD 23)
 include(FetchContent)
 
-
 # Fetch cxstructs
 FetchContent_Declare(cxstructs GIT_REPOSITORY https://github.com/gk646/CXStructures.git)
 FetchContent_MakeAvailable(cxstructs)
@@ -52,11 +51,14 @@ file(GLOB_RECURSE SRC_FILES "src/*.cpp" "src/*.h" "src/*.hpp")
 
 add_executable(cxurity ${SRC_FILES})
 
+# Comment when compiling the standalone executable
+target_compile_definitions(cxurity PRIVATE CXU_COMPILE_DEBUG)
 
 # Platform-specific configurations
 if (WIN32)
     target_compile_definitions(cxurity PRIVATE CXU_HOST_SYSTEM_WIN)
-    target_link_libraries(cxurity Kernel32 cxstructs raylib Psapi Iphlpapi)
+    target_link_libraries(cxurity Kernel32 cxstructs raylib Psapi Iphlpapi advapi32 dwmapi)
+    #set_target_properties(cxurity PROPERTIES WIN32_EXECUTABLE TRUE)
 elseif (UNIX)
     target_compile_definitions(cxurity PRIVATE CXU_HOST_SYSTEM_UNIX)
 endif ()
