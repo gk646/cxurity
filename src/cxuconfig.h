@@ -25,16 +25,19 @@
 #include <utility>
 
 
-#define CXU_WORKER_THREADS 4
 
-#define CXU_APPLICATION_FPS 60
-#define CXU_APPLICATION_NAME "cxurity"
-#define CXU_PROCESS_NAME "cxurity.exe"
+#define CONCAT_PATH(base, path) (base path)
+
+//Application defines
+#define CXU_APP_WORKER_THREADS 4
+#define CXU_APP_FPS 60
+#define CXU_APP_NAME "cxurity"
+#define CXU_APP_PROCESS_NAME "cxurity.exe"
+#define CXU_APP_RES_PATH "res/"
 
 //OS specific
-#define CXU_HOST_SYSTEM_WIN
-#define CXU_HOST_SYSTEM_UNIX
-#undef CXU_HOST_SYSTEM_UNIX
+//#define CXU_HOST_SYSTEM_WIN
+//#define CXU_HOST_SYSTEM_UNIX
 
 #ifdef CXU_HOST_SYSTEM_WIN
 //-----------WINDOWS DEFINES---------------

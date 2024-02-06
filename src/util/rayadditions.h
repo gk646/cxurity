@@ -23,4 +23,16 @@ inline void DrawTextCXU(const char* text, Vector2 pos, float fontSize, Color col
   DrawTextEx(font, text, pos, fontSize, 1, color);
 }
 
+inline Texture LoadTextureCXU(const char* path) {
+  auto img = LoadImage(path);
+  auto tex = LoadTextureFromImage(img);
+  UnloadImage(img);
+  return tex;
+}
+
+inline void SetWindowIconCXU(){
+  auto icon = LoadImage(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity.png"));
+  SetWindowIcon(icon);
+  UnloadImage(icon);
+}
 #endif  //CXURITY_SRC_UTIL_RAYADDITIONS_H_

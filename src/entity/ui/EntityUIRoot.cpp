@@ -15,9 +15,11 @@
 void EntityUIRoot::draw(Entity& e) {
   BeginDrawing();
   ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-  styleSelector();
+  DrawTextureEx(CXU_APP_TEXTURES[APP_ROUND], {GetScreenWidth() * 0.04F, GetScreenHeight() * 0.03F},
+                0, 1.5F, WHITE);
   statusBar.draw(e, {0, 0});
   sPanel.draw(e, {(float)GetScreenWidth() * 0.7F, 0});
+  styleSelector();
   EndDrawing();
 }
 
@@ -66,7 +68,7 @@ void EntityUIRoot::styleSelector() {
     prevVisualStyleActive = visualStyleActive;
   }
 
-  GuiComboBox({GetScreenWidth()*0.08F, GetScreenHeight()*0.031F, 100, 20},
+  GuiComboBox({GetScreenWidth() * 0.90F, GetScreenHeight() * 0.96F, 100, 20},
               "default;Jungle;Candy;Lavanda;Cyber;Terminal;Ashes;Bluish;Dark;Cherry;Sunny;Enefete",
               &visualStyleActive);
 }

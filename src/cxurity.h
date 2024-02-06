@@ -7,15 +7,16 @@
 #include "util/Util.h"
 #include <raylib.h>
 
-struct Entity;
+//Global state
+inline Texture CXU_APP_TEXTURES[10];
+inline const char* CXU_ROLE_NAMES[4]{"ADMIN", "USER", "UNSET", "SERVER"};
 
 using ProcessID = uint32_t;
-
 enum class CXU_SecurityLevel : uint8_t { FULL, MAIN_ONLY };
 enum class CXU_ProcessType : uint8_t { SYSTEM, USER_LAUNCHED, UNSET, MALICIOUS, UNKNOWN };
 enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
-inline const char* CXU_ROLE_NAMES[4]{"ADMIN", "USER", "UNSET", "SERVER"};
 enum class CXU_TabType : uint8_t { DASHBOARD, STATUS_BAR };
+enum CXU_Texture : uint8_t {APP, APP_ROUND};
 enum CXU_Result : int { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
@@ -76,6 +77,7 @@ struct ProcessFetcher {
  private:
 };
 
+struct Entity;
 struct ProcessPool {
   std::unordered_map<ProcessID, Process*> idMap;
   ProcessList list;
@@ -186,6 +188,9 @@ struct Dashboard : public TabList {
 struct StatusBar : public TabList {
   StatusBar();
   void draw(Entity& e, Vector2 pos) final;
+ private:
+  char textBoxText[64] = "Text box";
+  bool textBoxEditMode = false;
 };
 struct OverView : public UIComponent {
   void draw(Entity& e, Vector2 pos) final{};
@@ -236,6 +241,7 @@ struct CXUEntityApplication {
 
  private:
   void initOS();
+  void initRaylib();
 };
 
 #endif  //CXURITY_SRC_CXURITY_H_

@@ -3,6 +3,7 @@
 Dashboard::Dashboard() {
   tabs.emplace_back(new OverView(), "Overview");
   tabs.emplace_back(new ProcessListView(), "Processes");
+  tabs.emplace_back(nullptr, "Anomalies");
 
   if (!tabs.empty()) {
     tabs[0].isSelected = true;
@@ -12,11 +13,12 @@ Dashboard::Dashboard() {
 void Dashboard::draw(Entity& e, Vector2 pos) {
   float fSize = getBigFontSize();
   DrawTextCXU("Dashboard", pos, fSize, getTextColor(0), TEXT_ALIGN_LEFT, true);
-  pos.y += fSize * 1.2F;
+  pos.y += fSize * 1.7F;
+
   for (auto& t : tabs) {
     if (t.draw(e, pos, CXU_TabType::DASHBOARD)) {
       setSelected(&t);
     }
-    pos.x += t.getNameWidth(CXU_TabType::DASHBOARD) + 30;
+    pos.x += t.getNameWidth(CXU_TabType::DASHBOARD) + 40;
   }
 }

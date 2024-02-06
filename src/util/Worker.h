@@ -22,7 +22,6 @@ inline void enqueueTask(std::function<void()> task) noexcept {
   }
   condition.notify_one();
 }
-
 inline void IMPL_worker() noexcept {
   while (true) {
     std::function<void()> task;
@@ -36,14 +35,12 @@ inline void IMPL_worker() noexcept {
     task();
   }
 }
-
 inline void IMPL_initWorkers(uint8_t numWorkers) noexcept {
   for (uint8_t i = 0; i < numWorkers; ++i) {
     workers.emplace_back(IMPL_worker);
   }
   std::cout << "Registered " << (int)numWorkers << " Workers" << std::endl;
 }
-
 inline void IMPL_stopAllWorkers() noexcept {
   {
     std::lock_guard<std::mutex> lock(queue_mutex);
