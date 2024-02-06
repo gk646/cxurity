@@ -1,4 +1,5 @@
 #include "../cxurity.h"
+#include "../util/OSHelper.h"
 #include <raylib.h>
 
 CXUEntityApplication::CXUEntityApplication() : entity() {
@@ -6,8 +7,8 @@ CXUEntityApplication::CXUEntityApplication() : entity() {
   SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
   SetWindowState(FLAG_MSAA_4X_HINT);
   InitWindow(1196, 820, CXU_APPLICATION_NAME);
-  //SetWindowState(FLAG_WINDOW_RESIZABLE);
   SetTargetFPS(CXU_APPLICATION_FPS);
+  initOS();
 }
 
 CXUEntityApplication::~CXUEntityApplication() {
@@ -21,4 +22,11 @@ int CXUEntityApplication::run() {
   }
   CloseWindow();
   return CXU_SUCCESS;
+}
+
+void CXUEntityApplication::initOS() {
+#ifdef CXU_HOST_SYSTEM_WIN
+  EnableDebugPrivilege();
+#elif CXU_HOST_SYSTEM_UNIX
+#endif
 }

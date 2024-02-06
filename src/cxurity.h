@@ -4,6 +4,7 @@
 #include "cxuconfig.h"
 #include "util/Worker.h"
 #include "util/rayadditions.h"
+#include "util/Util.h"
 #include <raylib.h>
 
 struct Entity;
@@ -13,21 +14,24 @@ using ProcessID = uint32_t;
 enum class CXU_SecurityLevel : uint8_t { FULL, MAIN_ONLY };
 enum class CXU_ProcessType : uint8_t { SYSTEM, USER_LAUNCHED, UNSET, MALICIOUS, UNKNOWN };
 enum class CXU_EntityRole : uint8_t { ADMIN, USER, UNSET, SERVER };
-inline const char *CXU_ROLE_NAMES [4]{"ADMIN", "USER","UNSET", "SERVER" };
+inline const char* CXU_ROLE_NAMES[4]{"ADMIN", "USER", "UNSET", "SERVER"};
 enum class CXU_TabType : uint8_t { DASHBOARD, STATUS_BAR };
-enum CXU_Result : uint8_t { CXU_SUCCESS, CXU_ERROR };
+enum CXU_Result : int { CXU_SUCCESS, CXU_ERROR };
 
 struct Process {
-  char name[31];          //Process name | 30 characters + null terminator
-  uint32_t id;            //Process id
-  uint32_t pId;           //Process id of the parent
-  uint16_t cntThreads;    //Number of execution threads started by process
-  uint16_t basePriority;  //Base priority of process's threads
+  PROCESS_MEMORY_COUNTERS pmc;  //process memory counters
+  char name[31];                //Process name | 30 characters + null terminator
+  uint64_t uTime;               //cpu time in user mode
+  uint64_t kTime;               //cpu time in kernel mode
+  uint32_t id;                  //Process id
+  uint32_t pId;                 //Process id of the parent
+  uint16_t cntThreads;          //Number of execution threads started by process
+  uint16_t basePriority;        //Base priority of process's threads
   CXU_ProcessType infType = CXU_ProcessType::UNSET;
 
   Process(){};
 #ifdef CXU_HOST_SYSTEM_WIN
-  explicit Process(PROCESSENTRY32& pe32);
+  explicit Process(PROCESSENTRY32&, PROCESS_MEMORY_COUNTERS&, uint64_t, uint64_t);
 #endif
   friend std::ostream& operator<<(std::ostream& out, const Process& p);
 };
@@ -68,6 +72,8 @@ struct ProcessList {
 struct ProcessFetcher {
   //Retrieves a snapshot of the current processes -limit=limits the number of entries
   static ProcessList getProcessList(uint16_t limit = 0);
+  static void network();
+ private:
 };
 
 struct ProcessPool {
@@ -85,9 +91,7 @@ struct ProcessPool {
   bool isRefresh(uint16_t);
 };
 
-struct Snapshot {
-  //TODO
-};
+struct Snapshot {};
 
 struct History {
   //TODO
@@ -107,10 +111,10 @@ struct DeviceInformation {
 };
 
 struct EntityInformation {
-  DeviceInformation devInfo{};                              //Device information
-  uint16_t rIntervalMil = 5000;                             //Refresh interval in millis
-  CXU_SecurityLevel sLevel = CXU_SecurityLevel::MAIN_ONLY;  //Security level for this entity
-  CXU_EntityRole eRole = CXU_EntityRole::UNSET;             //Role of this entity
+  DeviceInformation devInfo{};                         //Device information
+  uint16_t rIntervalMil = 5000;                        //Refresh interval in millis
+  CXU_SecurityLevel sLevel = CXU_SecurityLevel::FULL;  //Security level for this entity
+  CXU_EntityRole eRole = CXU_EntityRole::UNSET;        //Role of this entity
   EntityInformation();
 };
 
@@ -148,7 +152,7 @@ struct UIComponent {
   static float getMediumFontSize();
   static float getSmallFontSize();
   static Color getTextColor(int state);
-  static Color darken(const Color& , int v = 10);
+  static Color darken(const Color&, int v = 10);
   static Color lighten(const Color&, int v = 10);
 };
 
@@ -183,7 +187,7 @@ struct StatusBar : public TabList {
   StatusBar();
   void draw(Entity& e, Vector2 pos) final;
 };
-struct OverView : public UIComponent{
+struct OverView : public UIComponent {
   void draw(Entity& e, Vector2 pos) final{};
 };
 struct UserDisplay : public UIComponent {
@@ -229,6 +233,9 @@ struct CXUEntityApplication {
   CXUEntityApplication();
   ~CXUEntityApplication();
   int run();
+
+ private:
+  void initOS();
 };
 
 #endif  //CXURITY_SRC_CXURITY_H_

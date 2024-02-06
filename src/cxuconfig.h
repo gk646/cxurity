@@ -50,14 +50,11 @@
 #define NOSYSCOMMANDS      // SC_*
 #define NORASTEROPS        // Binary and Tertiary raster ops
 #define NOSHOWWINDOW       // SW_*
-#define OEMRESOURCE        // OEM Resource values
-#define NOATOM             // Atom Manager routines
 #define NOCLIPBOARD        // Clipboard routines
 #define NOCOLOR            // Screen colors
 #define NOCTLMGR           // Control and Dialog routines
 #define NODRAWTEXT         // DrawText() and DT_*
 #define NOGDI              // All GDI defines and routines
-#define NOKERNEL           // All KERNEL defines and routines
 #define NOUSER             // All USER defines and routines
 //#define NONLS            // All NLS defines and routines
 #define NOMB              // MB_* and MessageBox()
@@ -67,7 +64,6 @@
 #define NOMSG             // typedef MSG and associated routines
 #define NOOPENFILE        // OpenFile(), OemToAnsi, AnsiToOem, and OF_*
 #define NOSCROLL          // SB_* and scrolling routines
-#define NOSERVICE         // All Service Controller routines, SERVICE_ equates, etc.
 #define NOSOUND           // Sound driver routines
 #define NOTEXTMETRIC      // typedef TEXTMETRIC and associated routines
 #define NOWH              // SetWindowsHook and WH_*
@@ -80,9 +76,12 @@
 #define NOMCX             // Modem Configuration Extensions
 #define CXU_HOST_SYSTEM 0
 inline int CXU_OS_RESERVED_PIDS[2] = {0, 4};  //Static array to capture reserved pids
-#include <windows.h>
+#include <Windows.h>
+#include <Psapi.h>
+#include <winsock.h>
+#include <iphlpapi.h>
 #include <VersionHelpers.h>
-#include <tlhelp32.h>
+#include <TlHelp32.h>
 #elif CXU_HOST_SYSTEM_UNIX
 #define CXU_HOST_SYSTEM 1
 //-------------UNIX DEFINES-------------

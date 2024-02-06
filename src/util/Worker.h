@@ -41,7 +41,7 @@ inline void IMPL_initWorkers(uint8_t numWorkers) noexcept {
   for (uint8_t i = 0; i < numWorkers; ++i) {
     workers.emplace_back(IMPL_worker);
   }
-  std::cout << "Registered " << numWorkers << " Workers" << std::endl;
+  std::cout << "Registered " << (int)numWorkers << " Workers" << std::endl;
 }
 
 inline void IMPL_stopAllWorkers() noexcept {

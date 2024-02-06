@@ -9,7 +9,8 @@
 #include "cxuconfig.h"
 #include "cxurity.h"
 #include <cxutil/cxtime.h>
-
+#include "util/Util.h"
+#include "util/OSHelper.h"
 
 
 using namespace std;

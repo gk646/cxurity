@@ -11,8 +11,8 @@ StatusBar::StatusBar() {
 }
 
 void StatusBar::draw(Entity& e, Vector2 pos) {
-  Vector2 tabStart = {pos.x + (float)GetScreenWidth() * 0.20F,
-                      pos.y + (float)GetScreenHeight() * 0.03F};
+  Vector2 tabStart = {pos.x + (float)GetScreenWidth() * 0.21F,
+                      pos.y + (float)GetScreenHeight() * 0.04F};
 
   for (auto& t : tabs) {
     if (t.draw(e, tabStart, CXU_TabType::STATUS_BAR)) {

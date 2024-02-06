@@ -2,11 +2,11 @@
 
 #ifdef CXU_HOST_SYSTEM_WIN
 
-Process::Process(PROCESSENTRY32& pe32)
+Process::Process(PROCESSENTRY32& pe32,PROCESS_MEMORY_COUNTERS& pmc, uint64_t uTime, uint64_t kTime)
     : id(pe32.th32ProcessID),
       pId(pe32.th32ParentProcessID),
       cntThreads(pe32.cntThreads),
-      basePriority(pe32.pcPriClassBase) {
+      basePriority(pe32.pcPriClassBase) , pmc(pmc),uTime(uTime), kTime(kTime){
   strncpy_s(name, pe32.szExeFile, 30);
   name[30] = '\0';
 }

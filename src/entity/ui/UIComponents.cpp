@@ -19,7 +19,7 @@ Color UIComponent::darken(const Color&c, int v) {
 }
 
 Color UIComponent::getTextColor(int state) {
-  return GetColor(GuiGetStyle(DEFAULT, 3 + state * 3));
+  return GetColor(GuiGetStyle(DEFAULT, 2 + state * 3));
 }
 
 void ProcessListView::draw(Entity& e, Vector2 pos) {
