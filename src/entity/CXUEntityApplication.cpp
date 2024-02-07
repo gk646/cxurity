@@ -26,9 +26,11 @@ int CXUEntityApplication::run() {
 void CXUEntityApplication::initOS() {
 #ifdef CXU_HOST_SYSTEM_WIN
   SetWindowState(FLAG_WINDOW_UNDECORATED);
-  EnableDebugPrivilege();
 
+  EnableDebugPrivilege();  //Elevated privileges
   CXU_WIN_HANDLE = (HWND)GetWindowHandle();
+
+  AddTrayIcon(CXU_WIN_HANDLE);
   int borderThickness = 0;
   DwmSetWindowAttribute(CXU_WIN_HANDLE, DWMWA_VISIBLE_FRAME_BORDER_THICKNESS, &borderThickness,
                         sizeof(borderThickness));
@@ -48,9 +50,8 @@ void CXUEntityApplication::initOS() {
   DwmSetWindowAttribute(CXU_WIN_HANDLE, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference,
                         sizeof(cornerPreference));
 
-  AddTrayIcon(CXU_WIN_HANDLE);
-
-  CXU_RAYLIB_ORG_WNDPROC = (WNDPROC)SetWindowLongPtr(CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
+  CXU_RAYLIB_ORG_WNDPROC =
+      (WNDPROC)SetWindowLongPtr(CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
   SetWindowLongPtr(CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
 #elif CXU_HOST_SYSTEM_UNIX
 #endif
@@ -66,7 +67,7 @@ void CXUEntityApplication::initRaylib() {
   SetWindowIconCXU();
   auto n = LoadTextureCXU(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity.png"));
   CXU_APP_TEXTURES[APP] = n;
-  auto r = LoadTextureCXU(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity_circle.png"));
+  auto r = LoadTextureCXU(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity.png"));
   CXU_APP_TEXTURES[APP_ROUND] = r;
 }
 

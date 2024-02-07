@@ -28,7 +28,7 @@
 
 //Application defines
 #define CXU_APP_WORKER_THREADS 4
-#define CXU_APP_FPS 90
+#define CXU_APP_FPS 120
 #define CXU_APP_NAME "cxurity"
 #define CXU_APP_PROCESS_NAME "cxurity.exe"
 #define CXU_APP_RES_PATH "res/"
@@ -41,7 +41,6 @@
 #ifdef CXU_HOST_SYSTEM_WIN
 //-----------WINDOWS DEFINES---------------
 #define CXU_HOST_SYSTEM 0
-
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS      // CC_*, LC_*, PC_*, CP_*, TC_*, RC_
 #define NOVIRTUALKEYCODES  // VK_*

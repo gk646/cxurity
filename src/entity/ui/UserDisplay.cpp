@@ -7,6 +7,6 @@ void UserDisplay::draw(Entity& e, Vector2 pos) {
               TEXT_ALIGN_RIGHT, true);
   DrawTextCXU(CXU_ROLE_NAMES[(int)e.eInfo.eRole], {getRelSize(0.94F, CXU_WIDTH), pos.y + fSize},
               getSmallFontSize(), darken(getTextColor(0)), TEXT_ALIGN_RIGHT);
-  DrawCircle(pos.x + getRelSize(0.07, CXU_WIDTH), getRelSize(0.05F, CXU_HEIGHT), 23,
+  DrawCircle(pos.x + getRelSize(0.067F, CXU_WIDTH), pos.y + fSize*0.9F, 25,
              darken(getTextColor(0), 20));
 }

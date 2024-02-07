@@ -38,12 +38,13 @@ inline void EnableDebugPrivilege() {
 inline void TriggerClose() {
   PostMessage(CXU_WIN_HANDLE, WM_CLOSE, 0, 0);
 }
-inline void TriggerMinimize(){
-  PostMessage(CXU_WIN_HANDLE, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+inline void TriggerMinimize() {
+  ShowWindow(CXU_WIN_HANDLE, SW_MINIMIZE);
 }
-inline void TriggerHide(){
-    ShowWindow(CXU_WIN_HANDLE, SW_HIDE);
+inline void TriggerHide() {
+  ShowWindow(CXU_WIN_HANDLE, SW_HIDE);
 }
+
 inline LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
   switch (uMsg) {
     case WM_APP + CXU_APP_UID:
@@ -79,7 +80,8 @@ inline void AddTrayIcon(HWND hwnd) {
   nid.uID = CXU_APP_UID;
   nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
   nid.uCallbackMessage = WM_APP + CXU_APP_UID;  // Custom message for tray interaction
-  nid.hIcon = (HICON)LoadImageA(nullptr, "res/shared/ui/icons/cxurity.png", IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+  nid.hIcon = (HICON)LoadImageA(nullptr, "res/shared/ui/icons/cxurity.ico", IMAGE_ICON, 0, 0,
+                                LR_LOADFROMFILE);
   strcpy_s(nid.szTip, "Open cxurity");  // Tooltip text
   Shell_NotifyIcon(NIM_ADD, &nid);
 }
@@ -91,6 +93,5 @@ inline void RemoveTrayIcon(HWND hwnd) {
   Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 #endif
-
 
 #endif  //CXURITY_SRC_UTIL_OSHELPER_H_

@@ -150,7 +150,6 @@ struct Entity {
   }  // Dark Gray
 
 struct UIComponent {
-  Vector2 pos;
   virtual void draw(Entity&, Vector2) = 0;
   virtual ~UIComponent() = default;
   static float getBigFontSize();
@@ -163,6 +162,7 @@ struct UIComponent {
 };
 
 struct UIPanel : public UIComponent {
+  Vector2 pos;
   Vector2 rSize;  //Relative size of the component in percentile
   void draw(Entity&, Vector2) override = 0;
 
@@ -197,8 +197,8 @@ struct Dashboard : public TabList {
   void draw(Entity& e, Vector2 pos) final;
 };
 
-struct StatusBar : public TabList {
-  StatusBar();
+struct NavigationPane : public TabList {
+  NavigationPane();
   void draw(Entity& e, Vector2 pos) final;
 
  private:
@@ -207,6 +207,23 @@ struct StatusBar : public TabList {
 };
 struct OverView : public UIComponent {
   void draw(Entity& e, Vector2 pos) final{};
+};
+
+struct StatusBar : public UIComponent {
+  struct ScrollingText {
+    std::string msg;
+    uint16_t width = 0;
+    uint8_t uid = 0;
+    explicit ScrollingText(std::string&& s, uint8_t);
+    void draw(Vector2& pos) ;
+    void calculate() ;
+   private:
+    static void drawSeparator(Vector2 &);
+  };
+  std::vector<ScrollingText> scrollingText;
+  float currPos = 0;
+  StatusBar();
+  void draw(Entity& e, Vector2 pos) final;
 };
 struct UserDisplay : public UIComponent {
   void draw(Entity& e, Vector2 pos) final;
@@ -230,8 +247,9 @@ struct AnomalyPanel : public UIComponent {
 };
 
 struct EntityUIRoot {
-  StatusBar statusBar;
+  NavigationPane nPane;
   SidePanel sPanel;
+  StatusBar sBar;
   void draw(Entity&);
 
  private:
@@ -258,8 +276,8 @@ struct CXUEntityApplication {
 
  private:
   void initOS();
-  void initRaylib();
   void exitOS();
+  void initRaylib();
 };
 
 #endif  //CXURITY_SRC_CXURITY_H_

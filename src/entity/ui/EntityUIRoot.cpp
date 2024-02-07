@@ -14,8 +14,9 @@
 void EntityUIRoot::draw(Entity& e) {
   BeginDrawing();
   ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-  statusBar.draw(e, {0, 0});
+  nPane.draw(e, {0, 0});
   sPanel.draw(e, {UIComponent::getRelSize(0.7F, CXU_WIDTH), 0});
+  sBar.draw(e, {0, UIComponent::getRelSize(0.975F, CXU_HEIGHT)});
   styleSelector();
   drawOS();
   EndDrawing();
@@ -73,23 +74,23 @@ void EntityUIRoot::styleSelector() {
 void EntityUIRoot::drawOS() {
 #ifdef CXU_HOST_SYSTEM_WIN
   auto mousePosition = GetMousePosition();
-  float increment = UIComponent::getRelSize(0.015F, CXU_WIDTH);
-  Rectangle caption = {UIComponent::getRelSize(0.9F, CXU_WIDTH), 3, 16, 16};
+  float increment = UIComponent::getRelSize(0.02F, CXU_WIDTH);
+  Rectangle caption = {UIComponent::getRelSize(0.94F, CXU_WIDTH), 5, 20, 20};
   bool insideButton = false;
 
-  insideButton += CheckCollisionPointRec(mousePosition,caption);
+  insideButton += CheckCollisionPointRec(mousePosition, caption);
   if (GuiButton(caption, "#86#")) {
     TriggerHide();
   }
 
   caption.x += increment;
-  insideButton += CheckCollisionPointRec(mousePosition,caption);
+  insideButton += CheckCollisionPointRec(mousePosition, caption);
   if (GuiButton(caption, "#116#")) {
     TriggerMinimize();
   }
 
   caption.x += increment;
-  insideButton += CheckCollisionPointRec(mousePosition,caption);
+  insideButton += CheckCollisionPointRec(mousePosition, caption);
   if (GuiButton(caption, "#128#")) {
     TriggerClose();
   }

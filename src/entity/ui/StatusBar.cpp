@@ -1,34 +1,43 @@
 #include "../../cxurity.h"
 
 StatusBar::StatusBar() {
-  tabs.emplace_back(new Dashboard(), "Home");
-  tabs.emplace_back(new UISettings(), "Settings");
-  tabs.emplace_back(nullptr, "Help");
-
-  if (!tabs.empty()) {
-    tabs[0].isSelected = true;
-  }
+  scrollingText.emplace_back("Thank you for using cxurity", 0);
+  scrollingText.emplace_back("No anomalies detected!", 1);
+  scrollingText.emplace_back("Check out https://github.com/gk646/cxurity", 1);
 }
 
 void StatusBar::draw(Entity& e, Vector2 pos) {
-  DrawTextureEx(CXU_APP_TEXTURES[APP_ROUND],
-                {getRelSize(0.04F, CXU_WIDTH), getRelSize(0.04F, CXU_HEIGHT)}, 0, 1.5F, WHITE);
-  Vector2 tabStart = {pos.x + (float)GetScreenWidth() * 0.21F,
-                      pos.y + (float)GetScreenHeight() * 0.05F};
-
-  for (auto& t : tabs) {
-    if (t.draw(e, tabStart, CXU_TabType::STATUS_BAR)) {
-      setSelected(&t);
+  GuiStatusBar({pos.x, pos.y, (float)GetScreenWidth(), getRelSize(0.05F, CXU_HEIGHT)}, nullptr);
+  pos.x = currPos;
+  pos.y += 3;
+  float sw = GetScreenWidth();
+  for (auto& s : scrollingText) {
+    if (pos.x > sw) {
+      pos.x = pos.x - (sw + 50);
     }
-    tabStart.x += t.getNameWidth(CXU_TabType::STATUS_BAR) + 30;
-  }
-  Rectangle searchBox = {tabStart.x + 15, getRelSize(0.045F, CXU_HEIGHT),
-                         getRelSize(0.2F, CXU_WIDTH), getRelSize(0.04F, CXU_HEIGHT)};
-
-  if (GuiTextBox(searchBox, tBox, 32, isEditable)) {
-    isEditable = !isEditable;
+    s.draw(pos);
   }
 
-  GuiDrawIcon(42, searchBox.x + searchBox.width * 0.85F, searchBox.y, 2,
-              getTextColor(STATE_PRESSED));
+  currPos += 30.0F / CXU_APP_FPS;
+  if (currPos >= sw) {
+    currPos = -50;
+  }
+}
+
+StatusBar::ScrollingText::ScrollingText(std::string&& s, uint8_t uid) : msg(s), uid(uid) {}
+
+void StatusBar::ScrollingText::calculate() {
+  width = (int)MeasureTextEx(GuiGetFont(), msg.c_str(), 15, 1).x;
+}
+void StatusBar::ScrollingText::draw(Vector2& pos) {
+  calculate();
+  DrawTextCXU(msg.c_str(), pos, 15, getTextColor(STATE_NORMAL));
+  pos.x += width;
+  drawSeparator(pos);
+}
+
+void StatusBar::ScrollingText::drawSeparator(Vector2& pos) {
+  pos.x += 7;
+  DrawTextCXU(" // ", pos, 15, getTextColor(STATE_NORMAL));
+  pos.x += 30;
 }
