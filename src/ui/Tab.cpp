@@ -3,7 +3,7 @@
 #include <raygui.h>
 
 #include "UIComponent.h"
-#include "RaylibAddons.h"
+#include "common/RaylibAddons.h"
 #include "Tab.h"
 
 Tab::Tab(UIComponent* component, const char* name) : component(component), name(name) {}

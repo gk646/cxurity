@@ -1,9 +1,14 @@
+#define RAYLIB_IMPLEMENTATION
+#include <raylib.h>
+#define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
+#undef RAYLIB_IMPLEMENTATION
+#undef RAYGUI_IMPLEMENTATION
 
 #include "UIRoot.h"
-#include "OSUtil.h"
-#include "RaylibAddons.h"
-#include "UICommon.h"
+#include "common/RaylibAddons.h"
+#include "common/UICommon.h"
+#include "common/OSUtil.h"
 
 #include "style_jungle.h"
 #include "style_candy.h"
@@ -29,13 +34,14 @@ EntityUIRoot::EntityUIRoot() {
   CXU_APP_TEXTURES[APP] = n;
   auto r = LoadTextureCXU(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity.png"));
   CXU_APP_TEXTURES[APP_ROUND] = r;
-#ifdef CXU_HOST_SYSTEM_WIN
-  CXU_WIN_HANDLE = GetWindowHandle();
 
+#ifdef CXU_HOST_SYSTEM_WIN
+  SetWindowState(FLAG_WINDOW_UNDECORATED);
+  CXU_WIN_HANDLE = GetWindowHandle();
   AddTrayIcon((HWND)CXU_WIN_HANDLE);
   int borderThickness = 0;
-  DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_VISIBLE_FRAME_BORDER_THICKNESS, &borderThickness,
-                        sizeof(borderThickness));
+  DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_VISIBLE_FRAME_BORDER_THICKNESS,
+                        &borderThickness, sizeof(borderThickness));
   if (IsWindows10OrGreater()) {
     BOOL useHostBackdropBrush = TRUE;  // TRUE to enable, FALSE to disable
     DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_USE_HOSTBACKDROPBRUSH, &useHostBackdropBrush,
@@ -51,7 +57,8 @@ EntityUIRoot::EntityUIRoot() {
   DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference,
                         sizeof(cornerPreference));
 
-  CXU_RAYLIB_ORG_WNDPROC = SetWindowLongPtr((HWND)CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
+  CXU_RAYLIB_ORG_WNDPROC =
+      SetWindowLongPtr((HWND)CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
   SetWindowLongPtr((HWND)CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
 #endif
 }
@@ -66,15 +73,18 @@ EntityUIRoot::~EntityUIRoot() {
 #elif CXU_HOST_SYSTEM_UNIX
 #endif
 }
-void EntityUIRoot::draw(Entity& e) {
-  BeginDrawing();
-  ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-  nPane.draw(e, {0, 0});
-  sPanel.draw(e, {UIComponent::getRelSize(0.7F, CXU_WIDTH), 0});
-  sBar.draw(e, {0, UIComponent::getRelSize(0.975F, CXU_HEIGHT)});
-  styleSelector();
-  drawOS();
-  EndDrawing();
+bool EntityUIRoot::draw(Entity& e) {
+  while (!WindowShouldClose()) {
+    BeginDrawing();
+    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+    nPane.draw(e, {0, 0});
+    sPanel.draw(e, {UIComponent::getRelSize(0.7F, CXU_WIDTH), 0});
+    sBar.draw(e, {0, UIComponent::getRelSize(0.975F, CXU_HEIGHT)});
+    styleSelector();
+    drawOS();
+    EndDrawing();
+  }
+  return true;
 }
 void EntityUIRoot::styleSelector() {
   if (visualStyleActive != prevVisualStyleActive) {

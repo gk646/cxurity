@@ -3,7 +3,7 @@
 #include <common.h>
 
 #include "Dashboard.h"
-#include "RaylibAddons.h"
+#include "common/RaylibAddons.h"
 #include "OverView.h"
 
 Dashboard::Dashboard() {

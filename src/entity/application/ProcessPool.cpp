@@ -37,7 +37,7 @@ void ProcessPool::createMappings() {
 }
 
 bool ProcessPool::isRefresh(uint16_t rIntervalMil) {
-  if ((1000.0F / CXU_APP_FPS) * upCounter >= rIntervalMil) {
+  if ((1000.0F / CXU_APP_TPS) * upCounter >= rIntervalMil) {
     upCounter = 0;
     return true;
   }

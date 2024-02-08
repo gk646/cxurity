@@ -8,14 +8,16 @@
 struct CXUEntityApplication {
   Entity entity;
   EntityUIRoot uiRoot;
+  std::thread lThread;
+  bool shouldStop = false;
   CXUEntityApplication();
   ~CXUEntityApplication();
   int run();
 
  private:
+  void update();
   void initOS();
   void exitOS();
-  void initRaylib();
 };
 
 #endif  //CXURITY_SRC_HEADERS_APPLICATIONS_H_

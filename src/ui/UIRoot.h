@@ -1,7 +1,7 @@
 #ifndef CXURITY_SRC_ENTITY_UI_UIROOT_H_
 #define CXURITY_SRC_ENTITY_UI_UIROOT_H_
 
-#include <raylib.h>
+
 
 #include "NavigationPane.h"
 #include "SidePanel.h"
@@ -12,7 +12,7 @@ struct EntityUIRoot {
   NavigationPane nPane;
   SidePanel sPanel;
   StatusBar sBar;
-  void draw(Entity&);
+  bool draw(Entity&);
   EntityUIRoot();
   ~EntityUIRoot();
  private:

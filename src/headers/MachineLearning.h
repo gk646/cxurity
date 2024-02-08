@@ -1,8 +1,6 @@
 #ifndef CXURITY_SRC_HEADERS_MACHINELEARNING_H_
 #define CXURITY_SRC_HEADERS_MACHINELEARNING_H_
 
-
-
 using namespace torch;
 
 struct Encoder : nn::Module {

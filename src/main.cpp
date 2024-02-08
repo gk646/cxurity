@@ -1,11 +1,5 @@
 #include "cxurity.h"
 
-#define RAYLIB_IMPLEMENTATION
-#include <raylib.h>
-#define RAYGUI_IMPLEMENTATION
-#include <raygui.h>
-#undef RAYLIB_IMPLEMENTATION
-#undef RAYGUI_IMPLEMENTATION
 
 
 #ifdef CXU_HOST_SYSTEM_WIN

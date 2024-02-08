@@ -2,10 +2,10 @@
 #define CXURITY_SRC_UI_OSUTIL_H_
 
 #include "UICommon.h"
-#include <cxuconfig.h>
+#include "cxuconfig.h"
 
 #ifdef CXU_HOST_SYSTEM_WIN
-#include <WindowsHeaders.h>
+#include "WindowsHeaders.h"
 
 inline void TriggerClose() {
   PostMessage((HWND)CXU_WIN_HANDLE, WM_CLOSE, 0, 0);

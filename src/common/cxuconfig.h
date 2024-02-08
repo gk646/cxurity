@@ -8,6 +8,7 @@
 //Application defines
 #define CXU_APP_WORKER_THREADS 4
 #define CXU_APP_FPS 120
+#define CXU_APP_TPS 5
 #define CXU_APP_NAME "cxurity"
 #define CXU_APP_PROCESS_NAME "cxurity.exe"
 #define CXU_APP_RES_PATH "res/"

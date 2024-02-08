@@ -4,7 +4,7 @@
 #include <raylib.h>
 
 #include "StatusBar.h"
-#include "RaylibAddons.h"
+#include "common/RaylibAddons.h"
 
 StatusBar::StatusBar() {
   scrollingText.emplace_back("Thank you for using cxurity", 0);

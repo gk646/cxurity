@@ -2,7 +2,7 @@
 #include <raygui.h>
 #include <common.h>
 
-#include "UICommon.h"
+#include "common/UICommon.h"
 #include "NavigationPane.h"
 #include "Dashboard.h"
 #include "UISettings.h"
