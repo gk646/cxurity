@@ -1,8 +1,19 @@
-cmake_minimum_required(VERSION 3.26)
-
-project(cxurity CXX)
+cmake_minimum_required(VERSION 3.28)
+project(cxurity CXX CUDA)
 set(CMAKE_CXX_STANDARD 23)
 include(FetchContent)
+
+set(CMAKE_CUDA_STANDARD 11)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+
+if (WIN32)
+    set(USER_HOME $ENV{USERPROFILE})
+else ()
+    set(USER_HOME $ENV{HOME})
+endif ()
+
+set(Torch_DIR "${USER_HOME}/Documents/Libaries/libtorch/share/cmake/Torch")
+
 
 # Fetch cxstructs
 FetchContent_Declare(cxstructs GIT_REPOSITORY https://github.com/gk646/CXStructures.git)
@@ -48,17 +59,26 @@ endif ()
 # Source files
 file(GLOB_RECURSE SRC_FILES "src/*.cpp" "src/*.h" "src/*.hpp")
 
+find_package(Torch REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+
 
 add_executable(cxurity ${SRC_FILES})
 
+target_include_directories(cxurity PRIVATE "src/common")
+
 # Comment when compiling the standalone executable
 target_compile_definitions(cxurity PRIVATE CXU_COMPILE_DEBUG)
+target_precompile_headers(cxurity PRIVATE src/headers/pch.h)
 
 # Platform-specific configurations
 if (WIN32)
     target_compile_definitions(cxurity PRIVATE CXU_HOST_SYSTEM_WIN)
-    target_link_libraries(cxurity Kernel32 cxstructs raylib Psapi Iphlpapi advapi32 dwmapi)
-    #set_target_properties(cxurity PROPERTIES WIN32_EXECUTABLE TRUE)
+    target_link_libraries(cxurity Kernel32 cxstructs raylib Psapi Iphlpapi advapi32 dwmapi "${TORCH_LIBRARIES}")
+
+    #file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
+    #add_custom_command(TARGET cxurity POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TORCH_DLLS} ${CMAKE_BINARY_DIR})
+
 elseif (UNIX)
     target_compile_definitions(cxurity PRIVATE CXU_HOST_SYSTEM_UNIX)
 endif ()

@@ -1,7 +1,4 @@
-
-
 #include "cxurity.h"
-#include <cxutil/cxtime.h>
 
 #define RAYLIB_IMPLEMENTATION
 #include <raylib.h>
@@ -9,9 +6,6 @@
 #include <raygui.h>
 #undef RAYLIB_IMPLEMENTATION
 #undef RAYGUI_IMPLEMENTATION
-
-using namespace std;
-using namespace cxstructs;
 
 
 #ifdef CXU_HOST_SYSTEM_WIN

@@ -1,4 +1,6 @@
-#include "../../cxurity.h"
+#include <WindowsHeaders.h>
+
+#include "DeviceInformation.h"
 
 DeviceInformation::DeviceInformation() {
 #ifdef CXU_HOST_SYSTEM_WIN

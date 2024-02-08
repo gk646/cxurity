@@ -1,3 +1,5 @@
-#include "../../cxurity.h"
+#include "../../headers/Entity.h"
 
-EntityInformation::EntityInformation() {}
+EntityInformation::EntityInformation() {
+
+}

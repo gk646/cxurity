@@ -1,4 +1,10 @@
-#include "../../cxurity.h"
+#include <raygui.h>
+
+#include "UIRoot.h"
+#include "OSUtil.h"
+#include "RaylibAddons.h"
+#include "UICommon.h"
+
 #include "style_jungle.h"
 #include "style_candy.h"
 #include "style_lavanda.h"
@@ -11,6 +17,55 @@
 #include "style_sunny.h"
 #include "style_enefete.h"
 
+EntityUIRoot::EntityUIRoot() {
+  SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
+  SetWindowState(FLAG_MSAA_4X_HINT);
+  InitWindow(1196, 820, CXU_APP_NAME);
+  SetTargetFPS(CXU_APP_FPS);
+  SetExitKey(0);
+
+  SetWindowIconCXU();
+  auto n = LoadTextureCXU(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity.png"));
+  CXU_APP_TEXTURES[APP] = n;
+  auto r = LoadTextureCXU(CONCAT_PATH(CXU_APP_RES_PATH, "shared/ui/icons/cxurity.png"));
+  CXU_APP_TEXTURES[APP_ROUND] = r;
+#ifdef CXU_HOST_SYSTEM_WIN
+  CXU_WIN_HANDLE = GetWindowHandle();
+
+  AddTrayIcon((HWND)CXU_WIN_HANDLE);
+  int borderThickness = 0;
+  DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_VISIBLE_FRAME_BORDER_THICKNESS, &borderThickness,
+                        sizeof(borderThickness));
+  if (IsWindows10OrGreater()) {
+    BOOL useHostBackdropBrush = TRUE;  // TRUE to enable, FALSE to disable
+    DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_USE_HOSTBACKDROPBRUSH, &useHostBackdropBrush,
+                          sizeof(useHostBackdropBrush));
+  }
+
+  BOOL useImmersiveDarkMode = TRUE;  // TRUE to enable dark mode, FALSE for light mode
+  DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_USE_IMMERSIVE_DARK_MODE, &useImmersiveDarkMode,
+                        sizeof(useImmersiveDarkMode));
+
+  DWM_WINDOW_CORNER_PREFERENCE cornerPreference =
+      DWMWCP_ROUND;  // Options: DWMWCP_DEFAULT, DWMWCP_ROUND, DWMWCP_DONOTROUND
+  DwmSetWindowAttribute((HWND)CXU_WIN_HANDLE, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPreference,
+                        sizeof(cornerPreference));
+
+  CXU_RAYLIB_ORG_WNDPROC = SetWindowLongPtr((HWND)CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
+  SetWindowLongPtr((HWND)CXU_WIN_HANDLE, GWLP_WNDPROC, (LONG_PTR)WindowProc);
+#endif
+}
+
+EntityUIRoot::~EntityUIRoot() {
+  CloseWindow();
+  for (auto& t : CXU_APP_TEXTURES) {
+    UnloadTexture(t);
+  }
+#ifdef CXU_HOST_SYSTEM_WIN
+  RemoveTrayIcon((HWND)CXU_WIN_HANDLE);
+#elif CXU_HOST_SYSTEM_UNIX
+#endif
+}
 void EntityUIRoot::draw(Entity& e) {
   BeginDrawing();
   ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
@@ -21,7 +76,6 @@ void EntityUIRoot::draw(Entity& e) {
   drawOS();
   EndDrawing();
 }
-
 void EntityUIRoot::styleSelector() {
   if (visualStyleActive != prevVisualStyleActive) {
     GuiLoadStyleDefault();
@@ -70,7 +124,6 @@ void EntityUIRoot::styleSelector() {
               "default;Jungle;Candy;Lavanda;Cyber;Terminal;Ashes;Bluish;Dark;Cherry;Sunny;Enefete",
               &visualStyleActive);
 }
-
 void EntityUIRoot::drawOS() {
 #ifdef CXU_HOST_SYSTEM_WIN
   auto mousePosition = GetMousePosition();
@@ -98,7 +151,7 @@ void EntityUIRoot::drawOS() {
   if (!insideButton && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
     if (mousePosition.y < 17) {
       isMoving = true;
-      clickOffset = mousePosition;
+      clickOffset = {mousePosition.x, mousePosition.y};
     }
   }
 

@@ -1,4 +1,6 @@
-#include "../../cxurity.h"
+#include "../../headers/DataCollection.h"
+#include "../../util/Worker.h"
+#include "../../headers/Entity.h"
 
 ProcessPool::ProcessPool() {}
 
@@ -19,7 +21,7 @@ void ProcessPool::filterList(CXU_SecurityLevel sLevel) {
   if (sLevel == CXU_SecurityLevel::MAIN_ONLY) {
     int sortBackCounter = 1;
     for (int i = 0; i < list.len; i++) {
-      auto pid = list[i].pId;
+      auto pid = list[i][PI_PID];
       if (list.hasParent(pid)) {
         std::swap(list[i], list[list.len - sortBackCounter++]);
       }
@@ -30,7 +32,7 @@ void ProcessPool::filterList(CXU_SecurityLevel sLevel) {
 
 void ProcessPool::createMappings() {
   for (int i = 0; i < list.len; i++) {
-    idMap.insert({list[i].id, &list[i]});
+    idMap.insert({list[i][PI_ID], &list[i]});
   }
 }
 

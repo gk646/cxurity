@@ -1,4 +1,7 @@
-#include "../../cxurity.h"
+#include <raylib.h>
+#include <raygui.h>
+
+#include "UIPanel.h"
 
 void UIPanel::drawPanel() {
   DrawRectangleRounded(

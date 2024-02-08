@@ -1,5 +1,15 @@
-#include "../../cxurity.h"
+#include "../../headers/DataCollection.h"
+#include "../../headers/WindowsHeaders.h"
+
 #include <cxutil/cxtime.h>
+using namespace cxstructs;
+
+inline uint64_t fileTimeToUInt64(const FILETIME& ft) {
+  ULARGE_INTEGER uli;
+  uli.LowPart = ft.dwLowDateTime;
+  uli.HighPart = ft.dwHighDateTime;
+  return uli.QuadPart;
+}
 
 ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
   network();
@@ -44,7 +54,7 @@ ProcessList ProcessFetcher::getProcessList(uint16_t limit) {
 
       CloseHandle(hProcess);
 
-      pList.emplace_back(pe32, pmc, uTime, kTime);
+      pList.emplace_back(&pe32, &pmc, uTime, kTime);
       if (pList.len >= limit) break;
     } while (Process32Next(hProcessSnap, &pe32));
   } else {
@@ -63,18 +73,15 @@ void ProcessFetcher::network() {
   DWORD dwSize = 0;
   DWORD dwRetVal = 0;
 
-  // First call to determine the size needed
   dwRetVal = GetExtendedTcpTable(nullptr, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0);
   if (dwRetVal == ERROR_INSUFFICIENT_BUFFER) {
     std::vector<BYTE> buffer(dwSize);
     auto pTcpTable = reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(buffer.data());
 
-    // Second call to get the data
     if ((dwRetVal = GetExtendedTcpTable(pTcpTable, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL,
                                         0)) == NO_ERROR) {
       for (DWORD i = 0; i < pTcpTable->dwNumEntries; i++) {
         std::cout << "PID: " << pTcpTable->table[i].dwOwningPid << std::endl;
-        // Here you could correlate the PID with your process list
       }
     }
   }

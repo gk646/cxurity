@@ -1,7 +1,21 @@
-#ifndef CXURITY_SRC_UTIL_OSHELPER_H_
-#define CXURITY_SRC_UTIL_OSHELPER_H_
+#ifndef CXURITY_SRC_UI_OSUTIL_H_
+#define CXURITY_SRC_UI_OSUTIL_H_
+
+#include "UICommon.h"
+#include <cxuconfig.h>
 
 #ifdef CXU_HOST_SYSTEM_WIN
+#include <WindowsHeaders.h>
+
+inline void TriggerClose() {
+  PostMessage((HWND)CXU_WIN_HANDLE, WM_CLOSE, 0, 0);
+}
+inline void TriggerMinimize() {
+  ShowWindow((HWND)CXU_WIN_HANDLE, SW_MINIMIZE);
+}
+inline void TriggerHide() {
+  ShowWindow((HWND)CXU_WIN_HANDLE, SW_HIDE);
+}
 inline BOOL SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege) {
   TOKEN_PRIVILEGES tp;
   LUID luid;
@@ -27,24 +41,6 @@ inline BOOL SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivi
 
   return TRUE;
 }
-
-inline void EnableDebugPrivilege() {
-  HANDLE hToken;
-  if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
-    SetPrivilege(hToken, SE_DEBUG_NAME, TRUE);
-    CloseHandle(hToken);
-  }
-}
-inline void TriggerClose() {
-  PostMessage(CXU_WIN_HANDLE, WM_CLOSE, 0, 0);
-}
-inline void TriggerMinimize() {
-  ShowWindow(CXU_WIN_HANDLE, SW_MINIMIZE);
-}
-inline void TriggerHide() {
-  ShowWindow(CXU_WIN_HANDLE, SW_HIDE);
-}
-
 inline LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
   switch (uMsg) {
     case WM_APP + CXU_APP_UID:
@@ -67,11 +63,18 @@ inline LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
       return 0;
     default:
       if (CXU_RAYLIB_ORG_WNDPROC) {
-        return CallWindowProc(CXU_RAYLIB_ORG_WNDPROC, hwnd, uMsg, wParam, lParam);
+        return CallWindowProc((WNDPROC)CXU_RAYLIB_ORG_WNDPROC, hwnd, uMsg, wParam, lParam);
       }
       break;
   }
   return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+inline void EnableDebugPrivilege() {
+  HANDLE hToken;
+  if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
+    SetPrivilege(hToken, SE_DEBUG_NAME, TRUE);
+    CloseHandle(hToken);
+  }
 }
 inline void AddTrayIcon(HWND hwnd) {
   NOTIFYICONDATA nid = {};
@@ -94,4 +97,4 @@ inline void RemoveTrayIcon(HWND hwnd) {
 }
 #endif
 
-#endif  //CXURITY_SRC_UTIL_OSHELPER_H_
+#endif  //CXURITY_SRC_UI_OSUTIL_H_

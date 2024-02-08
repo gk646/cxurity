@@ -1,4 +1,5 @@
-#include "../../cxurity.h"
+#include "../../headers/DataCollection.h"
+#include <chrono>
 
 ProcessList::ProcessList() : ptr(nullptr), len(0), timestamp(std::time(nullptr)) {}
 ProcessList::ProcessList(const ProcessList& other)
@@ -53,7 +54,7 @@ void ProcessList::reserve(uint16_t newCap) {
 bool ProcessList::hasParent(uint32_t prntID) const {
   if (prntID == 0 || prntID == 4) return false;
   for (int i = 0; i < len; i++) {
-    if (ptr[i].id == prntID) {
+    if (ptr[i][PI_ID] == prntID) {
       return true;
     }
   }

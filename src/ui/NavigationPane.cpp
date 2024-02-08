@@ -1,4 +1,11 @@
-#include "../../cxurity.h"
+#include <raylib.h>
+#include <raygui.h>
+#include <common.h>
+
+#include "UICommon.h"
+#include "NavigationPane.h"
+#include "Dashboard.h"
+#include "UISettings.h"
 
 NavigationPane::NavigationPane() {
   tabs.emplace_back(new Dashboard(), "Home");
@@ -10,17 +17,17 @@ NavigationPane::NavigationPane() {
   }
 }
 
-void NavigationPane::draw(Entity& e, Vector2 pos) {
+void NavigationPane::draw(Entity& e, Vec2 pos) {
   DrawTextureEx(CXU_APP_TEXTURES[APP_ROUND],
-                {getRelSize(0.04F, CXU_WIDTH), getRelSize(0.04F, CXU_HEIGHT)}, 0, 1.5F, WHITE);
-  Vector2 tabStart = {pos.x + (float)GetScreenWidth() * 0.21F,
+               {getRelSize(0.04F, CXU_WIDTH), getRelSize(0.04F, CXU_HEIGHT)}, 0, 1.5F, WHITE);
+  Vec2 tabStart = {pos.x + (float)GetScreenWidth() * 0.21F,
                       pos.y + (float)GetScreenHeight() * 0.05F};
 
   for (auto& t : tabs) {
     if (t.draw(e, tabStart, CXU_TabType::STATUS_BAR)) {
       setSelected(&t);
     }
-    tabStart.x += t.getNameWidth(CXU_TabType::STATUS_BAR) + 30;
+    tabStart.x += t.getNameWidth() + 30;
   }
   Rectangle searchBox = {tabStart.x + 15, getRelSize(0.044F, CXU_HEIGHT),
                          getRelSize(0.2F, CXU_WIDTH), getRelSize(0.04F, CXU_HEIGHT)};

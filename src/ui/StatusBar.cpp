@@ -1,4 +1,10 @@
-#include "../../cxurity.h"
+#include <common.h>
+#include <cxuconfig.h>
+#include <raygui.h>
+#include <raylib.h>
+
+#include "StatusBar.h"
+#include "RaylibAddons.h"
 
 StatusBar::StatusBar() {
   scrollingText.emplace_back("Thank you for using cxurity", 0);
@@ -6,7 +12,7 @@ StatusBar::StatusBar() {
   scrollingText.emplace_back("Check out https://github.com/gk646/cxurity", 1);
 }
 
-void StatusBar::draw(Entity& e, Vector2 pos) {
+void StatusBar::draw(Entity& e, Vec2 pos) {
   GuiStatusBar({pos.x, pos.y, (float)GetScreenWidth(), getRelSize(0.05F, CXU_HEIGHT)}, nullptr);
   pos.x = currPos;
   pos.y += 3;
@@ -29,14 +35,14 @@ StatusBar::ScrollingText::ScrollingText(std::string&& s, uint8_t uid) : msg(s), 
 void StatusBar::ScrollingText::calculate() {
   width = (int)MeasureTextEx(GuiGetFont(), msg.c_str(), 15, 1).x;
 }
-void StatusBar::ScrollingText::draw(Vector2& pos) {
+void StatusBar::ScrollingText::draw(Vec2& pos) {
   calculate();
   DrawTextCXU(msg.c_str(), pos, 15, getTextColor(STATE_NORMAL));
   pos.x += width;
   drawSeparator(pos);
 }
 
-void StatusBar::ScrollingText::drawSeparator(Vector2& pos) {
+void StatusBar::ScrollingText::drawSeparator(Vec2& pos) {
   pos.x += 7;
   DrawTextCXU(" // ", pos, 15, getTextColor(STATE_NORMAL));
   pos.x += 30;

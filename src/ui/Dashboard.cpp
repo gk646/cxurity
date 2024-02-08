@@ -1,8 +1,14 @@
-#include "../../cxurity.h"
+#include <raylib.h>
+#include <raygui.h>
+#include <common.h>
+
+#include "Dashboard.h"
+#include "RaylibAddons.h"
+#include "OverView.h"
 
 Dashboard::Dashboard() {
   tabs.emplace_back(new OverView(), "Overview");
-  tabs.emplace_back(new ProcessListView(), "Processes");
+  //tabs.emplace_back(new ProcessListView(), "Processes");
   tabs.emplace_back(nullptr, "Anomalies");
 
   if (!tabs.empty()) {
@@ -10,7 +16,7 @@ Dashboard::Dashboard() {
   }
 }
 
-void Dashboard::draw(Entity& e, Vector2 pos) {
+void Dashboard::draw(Entity& e, Vec2 pos) {
   float fSize = getBigFontSize();
   DrawTextCXU("Dashboard", pos, fSize, getTextColor(0), TEXT_ALIGN_LEFT, true);
   pos.y += fSize * 1.7F;
@@ -19,6 +25,6 @@ void Dashboard::draw(Entity& e, Vector2 pos) {
     if (t.draw(e, pos, CXU_TabType::DASHBOARD)) {
       setSelected(&t);
     }
-    pos.x += t.getNameWidth(CXU_TabType::DASHBOARD) + 40;
+    pos.x += t.getNameWidth() + 40;
   }
 }

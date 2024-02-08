@@ -1,46 +1,8 @@
-#ifndef CXURITY_SRC_CXCONFIG_H_
-#define CXURITY_SRC_CXCONFIG_H_
+#ifndef CXURITY_SRC_HEADERS_WINDOWSHEADERS_H_
+#define CXURITY_SRC_HEADERS_WINDOWSHEADERS_H_
 
-//stdlib
-#include <atomic>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <condition_variable>
-#include <cstdint>
-#include <ctime>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <mutex>
-#include <ostream>
-#include <queue>
-#include <string>
-#include <thread>
-#include <unordered_map>
-#include <vector>
-#include <iostream>
-#include <thread>
-#include <new>
-#include <utility>
 
-#define CONCAT_PATH(base, path) (base path)
-
-//Application defines
-#define CXU_APP_WORKER_THREADS 4
-#define CXU_APP_FPS 120
-#define CXU_APP_NAME "cxurity"
-#define CXU_APP_PROCESS_NAME "cxurity.exe"
-#define CXU_APP_RES_PATH "res/"
-#define CXU_APP_UID 646
-
-//OS specific
-//#define CXU_HOST_SYSTEM_WIN
-//#define CXU_HOST_SYSTEM_UNIX
-
-#ifdef CXU_HOST_SYSTEM_WIN
-//-----------WINDOWS DEFINES---------------
-#define CXU_HOST_SYSTEM 0
+//Windows Headers
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS      // CC_*, LC_*, PC_*, CP_*, TC_*, RC_
 #define NOVIRTUALKEYCODES  // VK_*
@@ -65,6 +27,7 @@
 #define NOPROFILER         // Profiler interface.
 #define NODEFERWINDOWPOS   // DeferWindowPos routines
 #define NOMCX              // Modem Configuration Extensions
+#define RPC_USE_NATIVE_WCHAR
 
 #define CloseWindow CloseWindow_Windows
 #define ShowCursor ShowCursor_Windows
@@ -82,21 +45,8 @@
 #include <shellapi.h>
 
 #undef LoadImage
-
 #undef CloseWindow
 #undef Rectangle
 #undef ShowCursor
 
-inline int CXU_OS_RESERVED_PIDS[2] = {0, 4};  //Static array to capture reserved pids
-inline HWND CXU_WIN_HANDLE;
-inline WNDPROC CXU_RAYLIB_ORG_WNDPROC = nullptr;
-#include <raylib.h>
-#include <raygui.h>
-
-#elif CXU_HOST_SYSTEM_UNIX
-#define CXU_HOST_SYSTEM 1
-//-------------UNIX DEFINES-------------
-inline constexpr int CXU_OS_RESERVED_PIDS[2] = {-1, -1};  //Static array to capture reserved pids
-#endif
-
-#endif  //CXURITY_SRC_CXCONFIG_H_
+#endif  //CXURITY_SRC_HEADERS_WINDOWSHEADERS_H_

@@ -1,4 +1,4 @@
-#include "../../cxurity.h"
+#include "../../headers/Entity.h"
 
 Entity::Entity() : eInfo{}, pPool{} {}
 

@@ -1,10 +1,9 @@
-#ifndef CXURITY_SRC_UTIL_RAYADDITIONS_H_
-#define CXURITY_SRC_UTIL_RAYADDITIONS_H_
+#ifndef CXURITY_SRC_UTIL_RAYLIB_H_
+#define CXURITY_SRC_UTIL_RAYLIB_H_
 
-#include <raylib.h>
-#include <raygui.h>
+#include <cxuconfig.h>
 
-inline void DrawTextCXU(const char* text, Vector2 pos, float fontSize, Color color,
+inline void DrawTextCXU(const char* text, Vec2 pos, float fontSize, Color color,
                         GuiTextAlignment align = TEXT_ALIGN_LEFT, bool isBold = false) {
   Font font = GuiGetFont();
   Vector2 textSize = MeasureTextEx(font, text, fontSize, 1);
@@ -20,7 +19,7 @@ inline void DrawTextCXU(const char* text, Vector2 pos, float fontSize, Color col
     DrawTextEx(font, text, {pos.x, pos.y + 1}, fontSize, 1, color);
   }
 
-  DrawTextEx(font, text, pos, fontSize, 1, color);
+  DrawTextEx(font, text, {pos.x, pos.y}, fontSize, 1, color);
 }
 
 inline Texture LoadTextureCXU(const char* path) {
@@ -35,4 +34,4 @@ inline void SetWindowIconCXU(){
   SetWindowIcon(icon);
   UnloadImage(icon);
 }
-#endif  //CXURITY_SRC_UTIL_RAYADDITIONS_H_
+#endif  //CXURITY_SRC_UTIL_RAYLIB_H_
