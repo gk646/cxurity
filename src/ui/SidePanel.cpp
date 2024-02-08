@@ -1,7 +1,7 @@
 
 #include <raylib.h>
-#include <raygui.h>
-#include <common.h>
+#include "raygui/raygui.h"
+#include <cxurity/common.h>
 #include "SidePanel.h"
 
 void SidePanel::draw(Entity& e, Vec2 pos) {

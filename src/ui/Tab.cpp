@@ -1,6 +1,6 @@
-#include <common.h>
+#include <cxurity/common.h>
 #include <raylib.h>
-#include <raygui.h>
+#include "raygui/raygui.h"
 
 #include "UIComponent.h"
 #include "common/RaylibAddons.h"

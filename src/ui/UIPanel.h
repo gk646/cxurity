@@ -1,7 +1,7 @@
 #ifndef CXURITY_SRC_ENTITY_UI_UIPANEL_H_
 #define CXURITY_SRC_ENTITY_UI_UIPANEL_H_
 
-#include <common.h>
+#include <cxurity/common.h>
 
 #include "UIComponent.h"
 

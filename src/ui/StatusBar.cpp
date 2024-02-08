@@ -1,6 +1,6 @@
-#include <common.h>
-#include <cxuconfig.h>
-#include <raygui.h>
+#include <cxurity/common.h>
+#include "cxurity/cxuconfig.h"
+#include "raygui/raygui.h"
 #include <raylib.h>
 
 #include "StatusBar.h"

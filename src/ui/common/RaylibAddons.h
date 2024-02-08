@@ -1,7 +1,7 @@
 #ifndef CXURITY_SRC_UTIL_RAYLIB_H_
 #define CXURITY_SRC_UTIL_RAYLIB_H_
 
-#include "cxuconfig.h"
+#include "cxurity/cxuconfig.h"
 
 inline void DrawTextCXU(const char* text, Vec2 pos, float fontSize, Color color,
                         GuiTextAlignment align = TEXT_ALIGN_LEFT, bool isBold = false) {

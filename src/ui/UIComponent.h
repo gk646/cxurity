@@ -3,7 +3,7 @@
 
 struct Entity;
 struct Color;
-#include <common.h>
+#include <cxurity/common.h>
 
 struct UIComponent {
   virtual void draw(Entity&, Vec2) = 0;

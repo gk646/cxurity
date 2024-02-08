@@ -1,8 +1,6 @@
 #ifndef CXURITY_SRC_ENTITY_UI_UIROOT_H_
 #define CXURITY_SRC_ENTITY_UI_UIROOT_H_
 
-
-
 #include "NavigationPane.h"
 #include "SidePanel.h"
 #include "StatusBar.h"

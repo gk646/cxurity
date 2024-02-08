@@ -8,7 +8,7 @@ FetchContent_MakeAvailable(raylib)
 
 # Download raygui header
 set(RAYGUI_URL "https://raw.githubusercontent.com/raysan5/raygui/master/src/raygui.h")
-set(RAYGUI_HEADER "${CMAKE_BINARY_DIR}/raygui.h")
+set(RAYGUI_HEADER "${CMAKE_SOURCE_DIR}/src/include/raygui/raygui.h")
 if (NOT EXISTS "${RAYGUI_HEADER}")
     message(STATUS "Downloading raygui.h from ${RAYGUI_URL}")
     file(DOWNLOAD ${RAYGUI_URL} ${RAYGUI_HEADER} TIMEOUT 60 TLS_VERIFY ON SHOW_PROGRESS)
@@ -27,8 +27,7 @@ set(STYLES_BASE_URL "https://raw.githubusercontent.com/raysan5/raygui/master/exa
 set(STYLE_NAMES jungle candy lavanda cyber terminal ashes bluish dark cherry sunny enefete)
 foreach (STYLE_NAME IN LISTS STYLE_NAMES)
     set(STYLE_URL "${STYLES_BASE_URL}/style_${STYLE_NAME}.h")
-    set(STYLE_HEADER "${CMAKE_BINARY_DIR}/style_${STYLE_NAME}.h")
+    set(STYLE_HEADER "${CMAKE_SOURCE_DIR}/src/include/raygui/style_${STYLE_NAME}.h")
     download_file(${STYLE_URL} ${STYLE_HEADER})
 endforeach ()
 
-include_directories(${CMAKE_BINARY_DIR})

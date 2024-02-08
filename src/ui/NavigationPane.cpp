@@ -1,6 +1,6 @@
 #include <raylib.h>
-#include <raygui.h>
-#include <common.h>
+#include "raygui/raygui.h"
+#include <cxurity/common.h>
 
 #include "common/UICommon.h"
 #include "NavigationPane.h"

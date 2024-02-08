@@ -1,26 +1,30 @@
 #define RAYLIB_IMPLEMENTATION
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
-#include <raygui.h>
+#include "raygui/raygui.h"
 #undef RAYLIB_IMPLEMENTATION
 #undef RAYGUI_IMPLEMENTATION
+
+#ifdef CXU_HOST_SYSTEM_WIN
+#include <cxurity/WindowsHeaders.h>
+#endif
 
 #include "UIRoot.h"
 #include "common/RaylibAddons.h"
 #include "common/UICommon.h"
 #include "common/OSUtil.h"
 
-#include "style_jungle.h"
-#include "style_candy.h"
-#include "style_lavanda.h"
-#include "style_cyber.h"
-#include "style_terminal.h"
-#include "style_ashes.h"
-#include "style_bluish.h"
-#include "style_dark.h"
-#include "style_cherry.h"
-#include "style_sunny.h"
-#include "style_enefete.h"
+#include <raygui/style_jungle.h>
+#include <raygui/style_candy.h>
+#include <raygui/style_lavanda.h>
+#include <raygui/style_cyber.h>
+#include <raygui/style_terminal.h>
+#include <raygui/style_ashes.h>
+#include <raygui/style_bluish.h>
+#include <raygui/style_dark.h>
+#include <raygui/style_cherry.h>
+#include <raygui/style_sunny.h>
+#include <raygui/style_enefete.h>
 
 EntityUIRoot::EntityUIRoot() {
   SetWindowState(FLAG_WINDOW_ALWAYS_RUN);

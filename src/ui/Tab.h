@@ -1,7 +1,7 @@
 #ifndef CXURITY_SRC_ENTITY_UI_TAB_H_
 #define CXURITY_SRC_ENTITY_UI_TAB_H_
 
-#include <common.h>
+#include <cxurity/common.h>
 
 struct UIComponent;
 struct Entity;
