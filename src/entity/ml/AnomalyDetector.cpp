@@ -6,6 +6,8 @@ AnomalyDetector::AnomalyDetector() {
 
 }
 
-void AnomalyDetector::onEvent(const Event&) {
+void AnomalyDetector::onEvent(const Event&e) {
+  if(e.type == CXU_EventType::REQUEST_ANOMALY_DETECTION){
 
+  }
 }

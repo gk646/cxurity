@@ -1,7 +1,10 @@
 #include "ProcessUpdater.h"
 
-#include <cxurity/Entity.h>
+ProcessList ProcessUpdater::getProcessList() {
+  auto baseList = pFetcher.getBaseProcessList(0);
 
-void ProcessUpdater::update() {
+  //TODO add network information
+  nFetcher.addNetworkInformation(baseList);
 
+  return baseList;
 }

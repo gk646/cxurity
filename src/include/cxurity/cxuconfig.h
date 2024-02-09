@@ -14,6 +14,7 @@
 #define CXU_APP_RES_PATH "res/"
 #define CXU_APP_UID 646
 
+
 //OS specific
 //#define CXU_HOST_SYSTEM_WIN
 //#define CXU_HOST_SYSTEM_UNIX
@@ -25,8 +26,5 @@
 #define CXU_HOST_SYSTEM 1
 //-------------UNIX DEFINES-------------
 #endif
-
-
-
 
 #endif  //CXURITY_SRC_CXCONFIG_H_

@@ -1,0 +1,10 @@
+#ifndef CXURITY_SRC_ENTITY_DEVICE_PROCESSDETECTOR_H_
+#define CXURITY_SRC_ENTITY_DEVICE_PROCESSDETECTOR_H_
+
+//Each process has a detector
+struct ProcessDetector {
+
+
+};
+
+#endif  //CXURITY_SRC_ENTITY_DEVICE_PROCESSDETECTOR_H_

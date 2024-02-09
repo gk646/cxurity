@@ -3,6 +3,7 @@
 #ifdef CXU_HOST_SYSTEM_WIN
 #include <cxurity/WindowsHeaders.h>
 #include <cstdlib>
+
 DeviceInformation::DeviceInformation() {
   if (IsWindows10OrGreater()) {
     strcpy_s(osVersion, "Windows 10 or later");

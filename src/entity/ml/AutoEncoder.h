@@ -22,9 +22,7 @@ struct Decoder : nn::Module {
   nn::Sigmoid sigmoid{nullptr};
   Decoder(int64_t hidden_size, int64_t output_size) {
     linear = register_module("linear", nn::Linear(hidden_size, output_size));
-    sigmoid = register_module(
-        "sigmoid",
-        nn::Sigmoid());  // Use sigmoid to ensure output is in the same range as input
+    sigmoid = register_module("sigmoid", nn::Sigmoid());
   }
 
   Tensor forward(torch::Tensor x) {

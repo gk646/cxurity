@@ -27,6 +27,7 @@ enum CXU_ProcessIndex : uint8_t {
   PI_QUOTA_CUR_PP,    // Current paged pool usage, in bytes
   PI_QUOTA_PEAK_NPP,  // Peak non-paged pool usage, in bytes
   PI_QUOTA_CUR_NPP,   // Current non-paged pool usage, in bytes
+  //------------Feature End------------------//
   PI_VALUES_CNT       // Sentinel value
 };
 

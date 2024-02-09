@@ -4,10 +4,8 @@
 #include "NetworkFetcher.h"
 #include "ProcessFetcher.h"
 
-struct DataBase;
 struct ProcessUpdater {
-
-  void update();
+  ProcessList getProcessList();
  private:
   ProcessFetcher pFetcher;
   NetworkFetcher nFetcher;

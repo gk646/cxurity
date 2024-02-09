@@ -1,11 +1,12 @@
 #ifndef CXURITY_SRC_ENTITY_ML_ENTITYAPPLICATION_H_
 #define CXURITY_SRC_ENTITY_ML_ENTITYAPPLICATION_H_
 
+#include <thread>
 #include <cxurity/Entity.h>
 #include "../ui/UIRoot.h"
 
 struct EntityApplication {
-  Entity entity;
+  Entity entity{};
   EntityUIRoot uiRoot;
   std::thread lThread;
   bool shouldStop = false;

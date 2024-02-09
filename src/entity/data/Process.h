@@ -5,11 +5,11 @@
 #include <iostream>
 
 struct Process {
-  double values[PI_VALUES_CNT];
+  double values[PI_VALUES_CNT]= {0};
   CXU_ProcessType infType = CXU_ProcessType::UNSET;
   Process(){};
 #ifdef CXU_HOST_SYSTEM_WIN
-  // PROCESSENTRY32 |  PROCESS_MEMORY_COUNTERS
+  // PROCESSENTRY32 |  PROCESS_MEMORY_COUNTERS  / cant predeclare typedef
   explicit Process(void*, void*, uint64_t, uint64_t);
 #endif
   Process(const Process&) = default;

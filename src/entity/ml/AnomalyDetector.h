@@ -4,7 +4,6 @@
 #include "../common/Events.h"
 
 struct AnomalyDetector : EventListener {
-
   AnomalyDetector();
   void onEvent(const Event&);
 };

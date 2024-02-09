@@ -26,22 +26,20 @@ struct EventListener {
 };
 
 struct EventBus {
-  void registerListener(CXU_EventType t, EventListener* listener) {
-    listeners[t].push_back(listener);
-  }
+  void registerListener(EventListener* listener) { listeners.push_back(listener); }
   void pushEvent(const Event& event) { eventQueue.push(event); }
   void processEvents() {
     while (!eventQueue.empty()) {
       auto event = eventQueue.front();
       eventQueue.pop();
-      auto& handlers = listeners[event.type];
-      for (auto& handler : handlers) {
+      for (auto& handler : listeners) {
         handler->onEvent(event);
       }
     }
   }
+
  private:
   std::queue<Event> eventQueue;
-  std::map<CXU_EventType, std::vector<EventListener*>> listeners;
+  std::vector<EventListener*> listeners;
 };
 #endif  //CXURITY_SRC_ENTITY_DATA_COMMON_EVENTS_H_

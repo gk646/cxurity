@@ -10,15 +10,9 @@ Entity::Entity()
       aDetector(new AnomalyDetector()),
       dBase(new DataBase()),
       eBus(new EventBus()) {
-
-  eBus->registerListener(CXU_EventType::REQUEST_DB_REFRESH, dBase);
-  eBus->registerListener(CXU_EventType::DB_REFRESH_FINISHED, dBase);
-
-  eBus->registerListener(CXU_EventType::REQUEST_ANOMALY_DETECTION, aDetector);
-  eBus->registerListener(CXU_EventType::ANOMALY_DETECTION_FINISHED, aDetector);
-
-  eBus->registerListener(CXU_EventType::REQUEST_ENTITY_INFO_UPDATE, eInfo);
-  eBus->registerListener(CXU_EventType::ENTITY_INFO_UPDATE_FINISHED, eInfo);
+  eBus->registerListener(dBase);
+  eBus->registerListener(aDetector);
+  eBus->registerListener(eInfo);
 }
 Entity::~Entity() {
   delete eBus;
@@ -27,10 +21,9 @@ Entity::~Entity() {
   delete aDetector;
 }
 void Entity::update() {
-  if ((1000.0F / CXU_APP_TPS) * upCounter++ >= eInfo->rIntervalMil) {
-    upCounter = 0;
+  uint16_t currTime = (1000 / CXU_APP_TPS) * upCounter++;
+  if (currTime % eInfo->rIntervalMil == 0) {
     eBus->pushEvent({CXU_EventType::REQUEST_DB_REFRESH, *this});
   }
-
   eBus->processEvents();
 }

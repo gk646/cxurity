@@ -19,6 +19,6 @@ struct Entity {
   void update();
 
  private:
-  uint8_t upCounter = 0;
+  uint64_t upCounter = 0;
 };
 #endif  //CXURITY_SRC_HEADERS_ENTITY_H_
