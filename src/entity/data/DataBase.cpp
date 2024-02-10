@@ -15,10 +15,10 @@ void DataBase::onEvent(const Event& e) {
       auto pList = pUpdater.getProcessList();
       history.emplace_back(*e.entity.eInfo, std::move(pList));
       e.entity.eBus->pushEvent({CXU_EventType::DB_REFRESH_FINISHED, e.entity});
+      e.entity.eBus->pushEvent({CXU_EventType::REQUEST_ANOMALY_DETECTION, e.entity});
       std::cout << "finished process update" << std::endl;
     });
   }
-
 }
 
 std::vector<const Snapshot*> DataBase::getLastX(uint8_t x) const {

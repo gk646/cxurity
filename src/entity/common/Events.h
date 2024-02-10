@@ -15,6 +15,8 @@ enum class CXU_EventType {
 };
 
 struct Entity;
+
+
 struct Event {
   CXU_EventType type = CXU_EventType::UNDEFINED;
   Entity& entity;
