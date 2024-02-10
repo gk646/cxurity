@@ -1,4 +1,3 @@
-#include <raylib.h>
 #include "raygui/raygui.h"
 #include <cxurity/common.h>
 
@@ -8,7 +7,7 @@
 
 Dashboard::Dashboard() {
   tabs.emplace_back(new OverView(), "Overview");
-  //tabs.emplace_back(new ProcessListView(), "Processes");
+  tabs.emplace_back(nullptr, "Processes");
   tabs.emplace_back(nullptr, "Anomalies");
 
   if (!tabs.empty()) {

@@ -19,7 +19,7 @@ NavigationPane::NavigationPane() {
 
 void NavigationPane::draw(Entity& e, Vec2 pos) {
   DrawTextureEx(CXU_APP_TEXTURES[APP_ROUND],
-               {getRelSize(0.04F, CXU_WIDTH), getRelSize(0.04F, CXU_HEIGHT)}, 0, 1.5F, WHITE);
+               {getRelSize(0.04F, CXU_WIDTH), getRelSize(0.035F, CXU_HEIGHT)}, 0, 2.2F, WHITE);
   Vec2 tabStart = {pos.x + (float)GetScreenWidth() * 0.21F,
                       pos.y + (float)GetScreenHeight() * 0.05F};
 

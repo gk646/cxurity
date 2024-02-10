@@ -48,10 +48,7 @@ torch::nn::Sequential AutoEncoder::constructLayers(bool compressing, int in, int
       }
     }
 
-    std::cout << current_size << std::endl;
-    std::cout << next_size << std::endl;
-    auto lin_layer = torch::nn::Linear(current_size, next_size);
-    layers->push_back(lin_layer);
+    layers->push_back(torch::nn::Linear(current_size, next_size));
     layers->push_back(torch::nn::ReLU());
 
     current_size = next_size;

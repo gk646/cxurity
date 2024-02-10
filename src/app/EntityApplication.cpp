@@ -29,8 +29,8 @@ int EntityApplication::run() {
 
 void EntityApplication::update() {
   while (!shouldStop) {
+    std::this_thread::sleep_for(std::chrono::milliseconds (1000 / CXU_APP_TPS));
     entity.update();
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000 / CXU_APP_TPS));
   }
 }
 
