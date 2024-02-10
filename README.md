@@ -25,6 +25,9 @@ Containers like the `Process` class are built with abstraction in mind and funct
 ### UI
 
 UI is done using raylib and raygui and custom components in a tree hierarchy. By natures this is multiplatform. For Windows there are native API calls to make the window prettier.
+Supports all the 12 different raylib styles (extendable)
+
+![windows_desktop](pictures/windows_desktop.png)
 
 ### Application
 
