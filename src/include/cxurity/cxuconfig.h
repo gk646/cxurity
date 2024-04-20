@@ -6,7 +6,7 @@
 #define CONCAT_PATH(base, path) (base path)
 
 //Application defines
-#define CXU_APP_WORKER_THREADS 2
+#define CXU_APP_WORKER_THREADS 4
 #define CXU_APP_FPS 120
 #define CXU_APP_TPS 10
 #define CXU_APP_NAME "cxurity"

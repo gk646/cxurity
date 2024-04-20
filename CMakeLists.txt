@@ -7,7 +7,7 @@ set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 include(FetchContent)
 
 if (WIN32)
-    add_compile_definitions(CXU_HOST_SYSTEM_WIN)
+    #add_compile_definitions(CXU_HOST_SYSTEM_WIN)
     set(USER_HOME $ENV{USERPROFILE})
 else ()
     add_compile_definitions(CXU_HOST_SYSTEM_UNIX)

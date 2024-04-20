@@ -35,6 +35,7 @@ void ProcessFetcher::iterateProcesses(ProcessList& pList, uint16_t limit) {
 
   if (Process32First(hProcessSnap, &pe32)) {
     do {
+      if (pe32.th32ProcessID == 0) continue;
       queryMemCPUInfo(&pe32, &pmc, uTime, kTime);
       pList.emplace_back(&pe32, &pmc, uTime, kTime);
       if (pList.len >= limit) break;
@@ -48,27 +49,30 @@ void ProcessFetcher::iterateProcesses(ProcessList& pList, uint16_t limit) {
 #endif
 }
 
+
+#ifdef CXU_HOST_SYSTEM_WIN
 void ProcessFetcher::queryMemCPUInfo(void* pe32Ptr, void* pmcPtr, uint64_t& uTime,
                                      uint64_t& kTime) {
   auto& pe32 = *(PROCESSENTRY32*)pe32Ptr;
   auto& pmc = *(PROCESS_MEMORY_COUNTERS*)pmcPtr;
 
-  if (pe32.th32ProcessID != 0) {
-    HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pe32.th32ProcessID);
+  HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pe32.th32ProcessID);
 
-    if (hProcess == nullptr) {
-      //DWORD dwError = GetLastError();
-      //std::cerr << "OpenProcess " << pe32.th32ProcessID << " failed with error " << dwError                << std::endl;
-    }
-
-    if (!GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {}
-
-    FILETIME ftCreation, ftExit, ftKernel, ftUser;
-    if (GetProcessTimes(hProcess, &ftCreation, &ftExit, &ftKernel, &ftUser)) {
-      uTime = fileTimeToUInt64(ftUser);
-      kTime = fileTimeToUInt64(ftKernel);
-    }
-
-    CloseHandle(hProcess);
+  if (hProcess == nullptr) {
+    DWORD dwError = GetLastError();
+    std::cerr << "OpenProcess " << pe32.th32ProcessID << " failed with error " << dwError
+              << std::endl;
   }
+
+  GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc));
+
+  FILETIME ftCreation, ftExit, ftKernel, ftUser;
+  if (GetProcessTimes(hProcess, &ftCreation, &ftExit, &ftKernel, &ftUser)) {
+    uTime = fileTimeToUInt64(ftUser);
+    kTime = fileTimeToUInt64(ftKernel);
+    std::cout << kTime << std::endl;
+  }
+
+  CloseHandle(hProcess);
 }
+#endif

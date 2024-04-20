@@ -179,5 +179,6 @@ void EntityUIRoot::drawOS() {
     }
   }
 #elif CXU_HOST_SYSTEM_UNIX
+
 #endif
 }

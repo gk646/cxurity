@@ -20,8 +20,9 @@ Entity::~Entity() {
   delete dBase;
   delete aDetector;
 }
+
 void Entity::update() {
-  uint16_t currTime = (1000 / CXU_APP_TPS) * upCounter++;
+  uint64_t currTime = (1000 / CXU_APP_TPS) * upCounter++;
   if (currTime % eInfo->rIntervalMil == 0) {
     eBus->pushEvent({CXU_EventType::REQUEST_DB_REFRESH, *this});
   }

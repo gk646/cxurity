@@ -9,6 +9,7 @@ struct ProcessFetcher {
 
  private:
   static void iterateProcesses(ProcessList&, uint16_t);
+
 #ifdef CXU_HOST_SYSTEM_WIN
   static void queryMemCPUInfo(void*, void*, uint64_t&, uint64_t&);
 #endif

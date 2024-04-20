@@ -1,5 +1,6 @@
 #include "DeviceInformation.h"
 
+
 #ifdef CXU_HOST_SYSTEM_WIN
 #include <cxurity/WindowsHeaders.h>
 #include <cstdlib>
@@ -48,7 +49,7 @@ DeviceInformation::DeviceInformation() {
   }
   size_t _;
   wcstombs_s(&_, name, sizeof(name), buffer, _TRUNCATE);
-#elif CXU_HOST_SYSTEM_UNIX
+#else
 DeviceInformation::DeviceInformation() {
 #endif
 }

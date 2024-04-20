@@ -2,7 +2,9 @@
 
 #include "../data/Snapshot.h"
 
-ProcessDetector::ProcessDetector() {}
+ProcessDetector::ProcessDetector() {
+
+}
 
 float ProcessDetector::getReconstructionError(uint32_t pid, const Snapshot& s) {
   Process* process = nullptr;
